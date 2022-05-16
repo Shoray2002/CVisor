@@ -19,3 +19,94 @@
 2022-05-16 12:30:30,878 [DEBUG] __main__:: Requested last image
 2022-05-16 12:30:33,384 [DEBUG] __main__:: Requested stream page
 2022-05-16 12:30:33,438 [DEBUG] __main__:: Starting stream
+2022-05-16 16:35:34,227 [INFO] camera:: Initializing camera class with 20 fps and video_source=0
+2022-05-16 16:35:34,356 [DEBUG] camera:: Starting thread
+2022-05-16 16:35:34,356 [DEBUG] camera:: Observation started
+2022-05-16 16:35:34,357 [INFO] camera:: Thread started
+2022-05-16 16:35:34,368 [DEBUG] __main__:: Starting server
+2022-05-16 16:35:37,470 [DEBUG] __main__:: Requested /
+2022-05-16 16:35:37,688 [DEBUG] __main__:: Requested last image
+2022-05-16 16:36:39,625 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:36:39,727 [DEBUG] __main__:: Starting stream
+2022-05-16 16:36:50,903 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:36:51,027 [DEBUG] __main__:: Starting stream
+2022-05-16 16:44:15,156 [INFO] camera:: Initializing camera class with 20 fps and video_source=0
+2022-05-16 16:44:15,283 [DEBUG] camera:: Starting thread
+2022-05-16 16:44:15,284 [DEBUG] camera:: Observation started
+2022-05-16 16:44:15,284 [INFO] camera:: Thread started
+2022-05-16 16:44:15,296 [DEBUG] __main__:: Starting server
+2022-05-16 16:44:19,616 [DEBUG] __main__:: Requested /
+2022-05-16 16:44:19,778 [DEBUG] __main__:: Requested last image
+2022-05-16 16:44:23,401 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:44:23,498 [DEBUG] __main__:: Starting stream
+2022-05-16 16:45:02,697 [INFO] camera:: Initializing camera class with 20 fps and video_source=0
+2022-05-16 16:45:02,716 [DEBUG] camera:: Starting thread
+2022-05-16 16:45:02,717 [DEBUG] camera:: Observation started
+2022-05-16 16:45:02,717 [INFO] camera:: Thread started
+2022-05-16 16:45:02,724 [DEBUG] __main__:: Starting server
+2022-05-16 16:45:06,673 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:45:06,849 [DEBUG] __main__:: Starting stream
+2022-05-16 16:45:08,028 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:45:08,166 [DEBUG] __main__:: Starting stream
+2022-05-16 16:45:47,082 [INFO] camera:: Initializing camera class with 20 fps and video_source=0
+2022-05-16 16:45:47,213 [DEBUG] camera:: Starting thread
+2022-05-16 16:45:47,214 [DEBUG] camera:: Observation started
+2022-05-16 16:45:47,214 [INFO] camera:: Thread started
+2022-05-16 16:45:47,222 [DEBUG] __main__:: Starting server
+2022-05-16 16:45:52,944 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:45:53,110 [DEBUG] __main__:: Starting stream
+2022-05-16 16:47:48,880 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:47:49,053 [DEBUG] __main__:: Starting stream
+2022-05-16 16:47:54,341 [DEBUG] __main__:: Requested /
+2022-05-16 16:47:54,473 [DEBUG] __main__:: Requested last image
+2022-05-16 16:47:57,060 [DEBUG] __main__:: Requested capture
+2022-05-16 16:47:57,659 [DEBUG] __main__:: Requested /
+2022-05-16 16:47:57,782 [DEBUG] __main__:: Requested last image
+2022-05-16 16:48:46,668 [INFO] camera:: Initializing camera class with 30 fps and video_source=0
+2022-05-16 16:48:46,688 [DEBUG] camera:: Starting thread
+2022-05-16 16:48:46,690 [DEBUG] camera:: Observation started
+2022-05-16 16:48:46,690 [INFO] camera:: Thread started
+2022-05-16 16:48:46,707 [DEBUG] __main__:: Starting server
+2022-05-16 16:48:50,547 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:48:50,699 [DEBUG] __main__:: Starting stream
+2022-05-16 16:49:10,097 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:49:10,253 [DEBUG] __main__:: Starting stream
+2022-05-16 16:54:04,215 [INFO] camera:: Initializing camera class with 30 fps and video_source=0
+2022-05-16 16:54:04,343 [DEBUG] camera:: Starting thread
+2022-05-16 16:54:04,344 [DEBUG] camera:: Observation started
+2022-05-16 16:54:04,344 [INFO] camera:: Thread started
+2022-05-16 16:54:04,356 [DEBUG] __main__:: Starting server
+2022-05-16 16:54:08,624 [DEBUG] __main__:: Requested /
+2022-05-16 16:54:08,788 [DEBUG] __main__:: Requested last image
+2022-05-16 16:54:10,395 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:54:10,524 [DEBUG] __main__:: Starting stream
+2022-05-16 16:54:47,175 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:54:47,319 [DEBUG] __main__:: Starting stream
+2022-05-16 16:55:21,055 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:55:21,192 [DEBUG] __main__:: Starting stream
+2022-05-16 16:55:31,426 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:55:31,555 [DEBUG] __main__:: Starting stream
+2022-05-16 16:55:39,942 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:55:40,052 [DEBUG] __main__:: Starting stream
+2022-05-16 16:55:40,800 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:55:40,908 [DEBUG] __main__:: Starting stream
+2022-05-16 16:56:04,175 [INFO] camera:: Initializing camera class with 30 fps and video_source=0
+2022-05-16 16:56:04,303 [DEBUG] camera:: Starting thread
+2022-05-16 16:56:04,303 [DEBUG] camera:: Observation started
+2022-05-16 16:56:04,303 [INFO] camera:: Thread started
+2022-05-16 16:56:04,310 [DEBUG] __main__:: Starting server
+2022-05-16 16:56:07,374 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:56:07,532 [DEBUG] __main__:: Starting stream
+2022-05-16 16:59:34,547 [INFO] camera:: Initializing camera class with 30 fps and video_source=0
+2022-05-16 16:59:34,677 [DEBUG] camera:: Starting thread
+2022-05-16 16:59:34,678 [DEBUG] camera:: Observation started
+2022-05-16 16:59:34,678 [INFO] camera:: Thread started
+2022-05-16 16:59:34,689 [DEBUG] __main__:: Starting server
+2022-05-16 16:59:37,834 [DEBUG] __main__:: Requested stream page
+2022-05-16 16:59:37,988 [DEBUG] __main__:: Starting stream
+2022-05-16 17:01:13,277 [DEBUG] __main__:: Requested stream page
+2022-05-16 17:01:13,419 [DEBUG] __main__:: Starting stream
+2022-05-16 17:05:46,227 [DEBUG] __main__:: Requested /
+2022-05-16 17:05:46,363 [DEBUG] __main__:: Requested last image
+2022-05-16 17:05:48,162 [DEBUG] __main__:: Requested stream page
+2022-05-16 17:05:48,266 [DEBUG] __main__:: Starting stream
