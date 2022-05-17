@@ -2,10 +2,19 @@ import cv2
 import threading
 import time
 import logging
+import numpy as np
+from keras.models import load_model
+model = load_model("./model2-008.model")
+
 
 logger = logging.getLogger(__name__)
-face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_alt2.xml")
 
+
+face_cascade = cv2.CascadeClassifier("./haarcascade_frontalface_alt2.xml")
+
+
+labels_dict = {0: 'without mask', 1: 'mask'}
+color_dict = {0: (0, 0, 255), 1: (0, 255, 0)}
 thread = None
 
 
@@ -14,6 +23,7 @@ class Camera:
         logger.info(
             f"Initializing camera class with {fps} fps and video_source={video_source}")
         self.fps = fps
+        self.size = 1
         self.video_source = video_source
         self.camera = cv2.VideoCapture(self.video_source)
         # We want a max of 5s history to be stored, thats 5s*fps
@@ -54,16 +64,28 @@ class Camera:
         if len(self.frames) == 0:
             return None
         im = self.frames[-1]
+        im = cv2.flip(im, 1, 1)
+        mini = cv2.resize(
+            im, (im.shape[1] // self.size, im.shape[0] // self.size))
+        faces = face_cascade.detectMultiScale(mini)
         gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-        for (x, y, w, h) in faces:
-            cv2.rectangle(im, (x, y), (x + w, y + h), (255, 0, 0), 2)
-        if len(self.frames) > 0:
-            if _bytes:
-                img = cv2.imencode('.png', self.frames[-1])[1].tobytes()
-            else:
-                img = self.frames[-1]
+        for f in faces:
+            (x, y, w, h) = [v * self.size for v in f]
+            face_img = im[y:y+h, x:x+w]
+            resized = cv2.resize(face_img, (150, 150))
+            normalized = resized/255.0
+            reshaped = np.reshape(normalized, (1, 150, 150, 3))
+            reshaped = np.vstack([reshaped])
+            result = model.predict(reshaped)
+            label = np.argmax(result, axis=1)[0]
+
+            cv2.rectangle(im, (x, y), (x+w, y+h), color_dict[label], 2)
+            cv2.rectangle(im, (x, y-40), (x+w, y), color_dict[label], -1)
+            cv2.putText(im, labels_dict[label], (x, y-10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+        if _bytes:
+            ret, jpeg = cv2.imencode('.jpg', im)
+            return jpeg.tobytes()
         else:
-            with open("images/not_found.jpeg", "rb") as f:
-                img = f.read()
-        return img
+            return im
