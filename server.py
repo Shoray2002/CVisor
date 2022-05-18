@@ -8,7 +8,6 @@ import logging.config
 import conf
 import os
 from werkzeug.utils import secure_filename
-
 logging.config.dictConfig(conf.dictConfig)
 logger = logging.getLogger(__name__)
 UPLOAD_FOLDER = 'static/uploads/'

@@ -6,13 +6,6 @@ from utils import analyze
 
 
 def capture_and_save(im):
-    # font = cv2.FONT_HERSHEY_SIMPLEX
-    # bottomLeftCornerOfText = (10, s[0]-10)
-    # fontScale = 1
-    # fontColor = (20, 20, 20)
-    # lineType = 2
-    # cv2.putText(im, datetime.datetime.now().isoformat().split(".")[
-    #             0], bottomLeftCornerOfText, font, fontScale, fontColor, lineType)
     im=analyze(im)
     m = 0
     p = Path("images")
