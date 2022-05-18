@@ -3,6 +3,7 @@ import threading
 import time
 import logging
 import numpy as np
+import datetime
 from keras.models import load_model
 model = load_model("./model2-008.model")
 
@@ -57,6 +58,7 @@ class Camera:
     def stop(self):
         logger.debug("Stopping thread")
         self.isrunning = False
+        
 
        # extracting frames
 
@@ -70,6 +72,13 @@ class Camera:
         faces = face_cascade.detectMultiScale(mini)
         gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        # bottomLeftCornerOfText = (10, im.shape[0]-10)
+        # fontScale = 1
+        # fontColor = (255, 255, 255)
+        # lineType = 2
+        # cv2.putText(im, datetime.datetime.now().isoformat().split(".")[
+        #     0], bottomLeftCornerOfText, font, fontScale, fontColor, lineType)
         for f in faces:
             (x, y, w, h) = [v * self.size for v in f]
             face_img = im[y:y+h, x:x+w]
@@ -79,11 +88,10 @@ class Camera:
             reshaped = np.vstack([reshaped])
             result = model.predict(reshaped)
             label = np.argmax(result, axis=1)[0]
-
             cv2.rectangle(im, (x, y), (x+w, y+h), color_dict[label], 2)
             cv2.rectangle(im, (x, y-40), (x+w, y), color_dict[label], -1)
             cv2.putText(im, labels_dict[label], (x, y-10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+                        font, 0.45, (255, 255, 255), 2)
         if _bytes:
             ret, jpeg = cv2.imencode('.jpg', im)
             return jpeg.tobytes()

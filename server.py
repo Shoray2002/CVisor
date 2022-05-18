@@ -1,4 +1,5 @@
-from flask import Flask, render_template, send_from_directory, Response
+from distutils.command.upload import upload
+from flask import Flask, flash, render_template, send_from_directory, Response, url_for, redirect, request
 # from flask_socketio import SocketIO
 from pathlib import Path
 from capture import capture_and_save
@@ -7,16 +8,21 @@ import argparse
 import logging
 import logging.config
 import conf
+import os
+from werkzeug.utils import secure_filename
 
 logging.config.dictConfig(conf.dictConfig)
 logger = logging.getLogger(__name__)
+UPLOAD_FOLDER = 'static/uploads/'
 
 camera = Camera()
 camera.run()
 
 app = Flask(__name__)
-# app.config["SECRET_KEY"] = "secret!"
+app.config["SECRET_KEY"] = "secret!"
 # socketio = SocketIO(app)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 1024  # 1 GB
 
 
 @app.after_request
@@ -38,12 +44,12 @@ def entrypoint():
     return render_template("index.html")
 
 
-@app.route("/r")
+@app.route("/capture")
 def capture():
     logger.debug("Requested capture")
     im = camera.get_frame(_bytes=False)
     capture_and_save(im)
-    return render_template("send_to_init.html")
+    return redirect(url_for("entrypoint"))
 
 
 @app.route("/images/last")
@@ -76,6 +82,36 @@ def stream_page():
 def video_feed():
     return Response(gen(camera),
                     mimetype="multipart/x-mixed-replace; boundary=frame")
+
+
+@app.route("/upload")
+def upload_page():
+    logger.debug("Requested upload page")
+    return render_template("upload.html")
+
+
+@app.route('/upload', methods=['POST'])
+def upload_video():
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+
+    file = request.files['file']
+    print(file)
+    if file.filename == '':
+        flash('No image selected for uploading')
+        return redirect(request.url)
+    else:
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        flash('Video successfully uploaded and displayed below')
+        return render_template('upload.html', filename=filename)
+
+
+@app.route('/display/<filename>')
+def display_video(filename):
+    #print('display_video filename: ' + filename)
+    return redirect(url_for('static', filename='uploads/' + filename), code=301)
 
 
 if __name__ == "__main__":
