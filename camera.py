@@ -20,14 +20,13 @@ thread = None
 
 
 class Camera:
-    def __init__(self, fps=30, video_source=0):
+    def __init__(self, fps=60, video_source=0):
         logger.info(
             f"Initializing camera class with {fps} fps and video_source={video_source}")
         self.fps = fps
         self.size = 1
         self.video_source = video_source
         self.camera = cv2.VideoCapture(self.video_source)
-        # We want a max of 5s history to be stored, thats 5s*fps
         self.max_frames = 5*self.fps
         self.frames = []
         self.isrunning = False
@@ -59,8 +58,6 @@ class Camera:
         logger.debug("Stopping thread")
         self.isrunning = False
         
-
-       # extracting frames
 
     def get_frame(self, _bytes=True):
         if len(self.frames) == 0:

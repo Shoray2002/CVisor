@@ -43,11 +43,17 @@ def entrypoint():
 
 
 @app.route("/capture")
+def capture_page():
+    logger.debug("Requested /capture")
+    return render_template("capture.html")
+
+
+@app.route("/snap")
 def capture():
     logger.debug("Requested capture")
     im = camera.get_frame(_bytes=False)
     capture_and_save(im)
-    return redirect(url_for("entrypoint"))
+    return redirect(url_for("capture_page"))
 
 
 @app.route("/images/last")
