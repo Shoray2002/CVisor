@@ -6,8 +6,6 @@ from pathlib import Path
 
 def capture_and_save(im):
     s = im.shape
-    # Add a timestamp
-    # use source code font
     font = cv2.FONT_HERSHEY_COMPLEX_SMALL
     bottomLeftCornerOfText = (10, s[0]-10)
     fontScale = 1

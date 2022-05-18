@@ -1,3 +1,4 @@
-__pycache__/
-logs/
 static/uploads/
+__pycache__/*
+images/*
+logs/logfile.log
