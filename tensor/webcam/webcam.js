@@ -1,6 +1,5 @@
-import predictWebcam from "../public/js/prediction.js";
+import { predictWebcam } from "../public/js/prediction.js";
 const video = document.getElementById("webcam");
-// const liveView = document.getElementById("liveView");
 const demosSection = document.getElementById("demos");
 const enableWebcamButton = document.getElementById("webcamButton");
 const canvas = document.getElementById("canvas");
