@@ -14,7 +14,8 @@ image_input.addEventListener("change", function () {
       display_image.style.height = `${image.height}px`;
       display_image.style.width = `${image.width}px`;
       display_image.style.backgroundImage = `url(${uploaded_image})`;
-      analyze_button.classList.remove("invisible");
+      canvas.width = image.width;
+      canvas.height = image.height;
     });
   });
   reader.readAsDataURL(this.files[0]);
@@ -23,6 +24,7 @@ image_input.addEventListener("change", function () {
 var model = undefined;
 blazeface.load().then(function (loadedModel) {
   model = loadedModel;
+  analyze_button.classList.remove("invisible");
 });
 
 analyze_button.addEventListener("click", function () {
@@ -35,4 +37,5 @@ analyze_button.addEventListener("click", function () {
 
 function startDrawing() {
   predictWebcam(model, image, ctx);
+  window.requestAnimationFrame(startDrawing);
 }
