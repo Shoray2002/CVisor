@@ -17,6 +17,7 @@ image_input.addEventListener("change", function () {
       canvas.width = image.width;
       canvas.height = image.height;
     });
+    console.log(image);
   });
   reader.readAsDataURL(this.files[0]);
 });

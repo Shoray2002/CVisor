@@ -3,8 +3,7 @@
   <head>
     <title>Multiple object detection using TensorFlow.js</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="/css/global.css" />
-    <!-- <link rel="stylesheet" href="./image.css" /> -->
+    <link rel="stylesheet" href="./video.css" />
   </head>
   <body>
     <h1>Video analysis</h1>
@@ -13,8 +12,16 @@
       id="video-input"
       accept="video/mp4, video/x-m4v, video/*"
     />
-    <video id="video-preview" autoplay controls></video>
-    <canvas id="canvas" width="640" height="480"></canvas>
+    <section>
+      <video
+        id="video-preview"
+        autoplay
+        controls
+        width="640"
+        height="480"
+      ></video>
+      <canvas id="canvas" width="640" height="480"></canvas>
+    </section>
     <button type="submit" id="analyze-button" class="invisible">
       Start Analysis
     </button>
