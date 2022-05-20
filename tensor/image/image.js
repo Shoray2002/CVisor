@@ -38,5 +38,5 @@ analyze_button.addEventListener("click", function () {
 
 function startDrawing() {
   predictWebcam(model, image, ctx);
-  window.requestAnimationFrame(startDrawing);
+  // window.requestAnimationFrame(startDrawing);
 }

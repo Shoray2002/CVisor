@@ -11,7 +11,10 @@ video_input.addEventListener("change", function () {
   video_preview.src = blobURL;
   console.log(video_preview);
 });
-
+// video_preview.addEventListener("loadedmetadata", function () {
+//   canvas.width = this.videoWidth;
+//   canvas.height = this.videoHeight;
+// });
 analyze_button.addEventListener("click", function () {
   if (!model) {
     return;

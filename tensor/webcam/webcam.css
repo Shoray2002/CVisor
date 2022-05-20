@@ -34,7 +34,7 @@ section {
   cursor: pointer;
 }
 
-.camView p {
+p {
   position: absolute;
   padding: 5px;
   background-color: #ff6f00d9;
