@@ -13,13 +13,7 @@ video {
   display: block;
 }
 
-section {
-  opacity: 1;
-  transition: opacity 500ms ease-in-out;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
+
 
 .removed {
   display: none;
@@ -27,4 +21,35 @@ section {
 
 .invisible {
   opacity: 0.2;
+}
+
+.camView {
+  position: relative;
+  float: left;
+  width: calc(100% - 20px);
+  margin: 10px;
+  cursor: pointer;
+}
+
+p {
+  position: absolute;
+  padding: 5px;
+  background-color: #ff6f003f;
+  color: #fff;
+  border: 1px dashed rgba(255, 255, 255, 0.7);
+  z-index: 2;
+  font-size: 12px;
+}
+
+.highlighter {
+  background: rgba(0, 255, 0, 0.25);
+  border: 1px dashed #fff;
+  z-index: 1;
+  position: absolute;
+}
+#liveView {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }

@@ -7,14 +7,24 @@
   </head>
   <body>
     <h1>Video analysis</h1>
-    <input
-      type="file"
-      id="video-input"
-      accept="video/mp4, video/x-m4v, video/*"
-    />
-    <section>
-      <video id="video-preview" controls width="640" height="480"></video>
-      <canvas id="canvas"></canvas>
+
+    <section id="demos">
+      <input
+        type="file"
+        id="video-input"
+        accept="video/mp4, video/x-m4v, video/*"
+      />
+      <div id="liveView" class="camView">
+        <video
+          id="video-preview"
+          controls
+          width="640"
+          height="480"
+          muted
+        ></video>
+        <p id="frame" style="display: none"></p>
+        <div id="box" style="display: none"></div>
+      </div>
     </section>
     <button type="submit" id="analyze-button" class="invisible">
       Start Analysis

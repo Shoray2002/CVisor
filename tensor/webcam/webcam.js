@@ -2,8 +2,9 @@ import { predictWebcam } from "../public/js/prediction.js";
 const video = document.getElementById("webcam");
 const demosSection = document.getElementById("demos");
 const enableWebcamButton = document.getElementById("webcamButton");
-const canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
+const start = document.getElementById("start");
+const frame = document.getElementById("frame");
+const box = document.getElementById("box");
 function getUserMediaSupported() {
   return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 }
@@ -24,9 +25,12 @@ function enableCam(event) {
   };
   navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
     video.srcObject = stream;
-    video.addEventListener("loadeddata", startDrawing);
   });
 }
+
+start.addEventListener("click", () => {
+  startDrawing();
+});
 
 var model = undefined;
 blazeface.load().then(function (loadedModel) {
@@ -35,6 +39,6 @@ blazeface.load().then(function (loadedModel) {
 });
 
 function startDrawing() {
-  predictWebcam(model, video, ctx);
+  predictWebcam(model, video,frame, box);
   requestAnimationFrame(startDrawing);
 }

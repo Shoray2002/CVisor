@@ -3,8 +3,8 @@ const image = new Image();
 const image_input = document.querySelector("#image-input");
 const display_image = document.querySelector("#display-image");
 const analyze_button = document.querySelector("#analyze-button");
-const canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
+const frame = document.getElementById("frame");
+const box = document.getElementById("box");
 image_input.addEventListener("change", function () {
   const reader = new FileReader();
   reader.addEventListener("load", () => {
@@ -14,8 +14,6 @@ image_input.addEventListener("change", function () {
       display_image.style.height = `${image.height}px`;
       display_image.style.width = `${image.width}px`;
       display_image.style.backgroundImage = `url(${uploaded_image})`;
-      canvas.width = image.width;
-      canvas.height = image.height;
     });
     console.log(image);
   });
@@ -37,6 +35,6 @@ analyze_button.addEventListener("click", function () {
 });
 
 function startDrawing() {
-  predictWebcam(model, image, ctx);
+  predictWebcam(model, image, frame, box);
   // window.requestAnimationFrame(startDrawing);
 }
