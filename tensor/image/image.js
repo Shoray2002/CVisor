@@ -5,12 +5,15 @@ const display_image = document.querySelector("#display-image");
 const analyze_button = document.querySelector("#analyze-button");
 const frame = document.getElementById("frame");
 const box = document.getElementById("box");
+const imageMetadata = {};
 image_input.addEventListener("change", function () {
   const reader = new FileReader();
   reader.addEventListener("load", () => {
     const uploaded_image = reader.result;
     image.src = uploaded_image;
     image.addEventListener("load", () => {
+      imageMetadata.width = image.width;
+      imageMetadata.height = image.height;
       display_image.style.height = `${image.height}px`;
       display_image.style.width = `${image.width}px`;
       display_image.style.backgroundImage = `url(${uploaded_image})`;
@@ -35,6 +38,6 @@ analyze_button.addEventListener("click", function () {
 });
 
 function startDrawing() {
-  predictWebcam(model, image, frame, box);
+  predictWebcam(model, image, frame, box, imageMetadata);
   // window.requestAnimationFrame(startDrawing);
 }

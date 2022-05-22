@@ -8,7 +8,7 @@ const box = document.getElementById("box");
 function getUserMediaSupported() {
   return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 }
-
+const webCamemetadata = {};
 if (getUserMediaSupported()) {
   enableWebcamButton.addEventListener("click", enableCam);
 } else {
@@ -24,6 +24,8 @@ function enableCam(event) {
     video: true,
   };
   navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+    webCamemetadata.width = stream.getVideoTracks()[0].getSettings().width;
+    webCamemetadata.height = stream.getVideoTracks()[0].getSettings().height;
     video.srcObject = stream;
   });
 }
@@ -39,6 +41,6 @@ blazeface.load().then(function (loadedModel) {
 });
 
 function startDrawing() {
-  predictWebcam(model, video, frame, box);
+  predictWebcam(model, video, frame, box, webCamemetadata);
   requestAnimationFrame(startDrawing);
 }
