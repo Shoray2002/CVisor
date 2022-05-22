@@ -1,58 +1,350 @@
+* {
+  margin: 0;
+}
 body {
-  font-family: helvetica, arial, sans-serif;
-  margin: 2em;
-  color: #3d3d3d;
+  min-width: 100%;
+  min-height: 100vh;
+  font-family: Hellix;
+  background: linear-gradient(7.28deg, #eef5ff 0%, #ffffff 99.69%);
+}
+
+.constrain {
+  max-width: 450px;
+  margin: auto;
+}
+
+h1,
+h2,
+h3,
+h6 {
+  font-weight: 500;
+  color: #111235;
 }
 
 h1 {
-  font-style: italic;
-  color: #ff6f00;
+  font-size: 64px;
+  line-height: 75px;
+  margin: 15px 0;
 }
 
-video {
+h2 {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+h3 {
+  font-size: 36px;
+}
+
+h5 {
+  font-weight: 700;
+  color: #111235;
+  font-size: 24px;
+  line-height: 28.8px;
+  margin-bottom: 15px;
+}
+
+h6 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 0 40px;
+}
+
+p {
+  line-height: 24px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+ul {
+  padding-left: 0;
+  padding: 30px 0;
+}
+ul li {
+  list-style-type: none;
+  padding: 20px 0;
+}
+
+input[type="text"] {
+  width: 55%;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-weight: 400;
+  font-family: Hellix;
+  background: url("https:/assets.codepen.io/6060109/icon-send.png") white 95%
+    50% no-repeat;
+}
+
+input[type="text"] * {
+  color: #111235;
+}
+.header-bold {
+  font-weight: 700;
+}
+.top-bar {
+  height: 75px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04),
+    0px 0px 1px rgba(0, 0, 0, 0.04);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content-section-container {
+  padding: 20px 15px;
+}
+
+.text-centered {
+  text-align: center;
+}
+.content-section-container img {
+  width: 100%;
+}
+
+.btn {
+  text-decoration: none;
   display: block;
+  width: 225px;
+  padding: 15px 0;
+  border-radius: 50px;
+  margin: 30px auto;
+  font-weight: 600;
+  text-align: center;
 }
 
-section {
-  opacity: 1;
-  transition: opacity 500ms ease-in-out;
+.btn-primary {
+  background-color: #4b5092;
+  color: #ffffff;
 }
 
-.removed {
+.btn-secondary {
+  background-color: #ffffff;
+  color: #436baa;
+}
+
+.blue-bg {
+  background-color: #f2f8ff;
+  width: 100%;
+}
+
+.gradient-blue-bg {
+  background: linear-gradient(99.85deg, #bad5ff 0%, #6487bf 100%);
+}
+
+.gradient-blue-bg img {
+  margin-bottom: -5px;
+}
+
+.panel {
+  border-radius: 30px;
+  padding: 60px 40px;
+  margin-bottom: 20px;
+}
+
+.panel h5 {
+  width: 85%;
+}
+
+.panel-blue {
+  background: #e4f0ff;
+}
+
+.panel-purple {
+  background: rgba(114, 122, 239, 0.1);
+}
+
+.footer-icons {
+  margin: 25px auto;
+  width: 45%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.icon-circle {
+  background-color: rgba(125, 173, 245, 0.2);
+  height: 32px;
+  width: 32px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-circle > img {
+  width: 55%;
+}
+#copyright {
+  margin: 60px 0;
+  text-align: center;
+}
+/* Modifier classes -- single style */
+
+.bp-100 {
+  padding-bottom: 100px;
+}
+
+.tp-80 {
+  padding-top: 80px;
+}
+
+.bm-40 {
+  margin-bottom: 40px;
+}
+
+.bm-15 {
+  margin-bottom: 15px;
+}
+
+.border-bottom {
+  border-bottom: 1px solid black;
+}
+.top-menu {
   display: none;
 }
 
-.invisible {
-  opacity: 0.2;
+.desktop-only {
+  display: none;
 }
 
-.camView {
-  position: relative;
-  float: left;
-  width: calc(100% - 20px);
-  margin: 10px;
-  cursor: pointer;
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .constrain {
+    max-width: 1500px;
+  }
+  .outer-container {
+    margin: 0 10%;
+  }
+  .top-bar {
+    box-shadow: none;
+    display: flex;
+    justify-content: space-between;
+  }
+  .top-menu {
+    display: flex;
+    width: 30%;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .hero-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row-reverse;
+  }
+  .hero-section img {
+    width: 60%;
+  }
+  .hero-text {
+    width: 54%;
+    text-align: left;
+  }
+  .btn {
+    margin: 35px 0;
+  }
+
+  .simple-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .simple-flex > * {
+    margin: 0;
+  }
+  .left-to-right {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 60px;
+  }
+  .workout-img-2 {
+    width: 45%;
+  }
+  .blue-bg {
+    width: 55%;
+    display: flex;
+    align-items: center;
+    border-radius: 50px;
+    padding: 0 30px;
+  }
+  .gradient-blue-bg {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+  }
+  .trainer-text {
+    text-align: left;
+    width: 30%;
+    margin-left: 40px;
+  }
+  .gradient-blue-bg img {
+    margin: 0;
+    width: 450px;
+  }
+  .panels-img-container {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    margin-top: 50px;
+  }
+  .panels-img-container img {
+    width: 30%;
+  }
+  .panels {
+    display: flex;
+    width: 80%;
+    flex-wrap: wrap;
+  }
+  .panel {
+    width: 49%;
+    box-sizing: border-box;
+  }
+  .mobile-only {
+    display: none;
+  }
+
+  .desktop-only {
+    display: block;
+  }
+  footer {
+    display: flex;
+  }
+  footer .content-section-container {
+    display: flex;
+    padding: 40px 0 0;
+  }
+  .footer-icons {
+    display: none;
+  }
+  footer h3 {
+    width: 30%;
+    text-align: left;
+  }
+  footer ul {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 200px;
+    padding: 0;
+    padding-right: 10%;
+  }
+  footer li {
+    padding-top: 15px;
+  }
+  footer .stay-up-to-date {
+    padding-top: 10px;
+    width: 30%;
+    text-align: left;
+  }
+  footer .stay-up-to-date input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  #copyright {
+    text-align: left;
+    margin-top: 0;
+    padding-top: 0;
+  }
 }
 
-.camView p {
-  position: absolute;
-  padding: 5px;
-  background-color: #ff6f00d9;
-  color: #fff;
-  border: 1px dashed rgba(255, 255, 255, 0.7);
-  z-index: 2;
-  font-size: 12px;
-}
-
-.highlighter {
-  background: rgba(0, 255, 0, 0.25);
-  border: 1px dashed #fff;
-  z-index: 1;
-  position: absolute;
-}
-#liveView {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}

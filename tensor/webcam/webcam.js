@@ -39,6 +39,6 @@ blazeface.load().then(function (loadedModel) {
 });
 
 function startDrawing() {
-  predictWebcam(model, video,frame, box);
+  predictWebcam(model, video, frame, box);
   requestAnimationFrame(startDrawing);
 }
