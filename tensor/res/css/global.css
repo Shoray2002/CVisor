@@ -289,6 +289,7 @@ input[type="text"] * {
     align-items: center;
     flex-direction: row-reverse;
     margin-top: 50px;
+    margin: 10px;
   }
   .panels-img-container img {
     width: 30%;
@@ -297,10 +298,13 @@ input[type="text"] * {
     display: flex;
     width: 80%;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
   }
   .panel {
-    width: 49%;
+    width: 40%;
     box-sizing: border-box;
+    margin: 10px;
   }
   .mobile-only {
     display: none;
