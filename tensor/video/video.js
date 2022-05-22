@@ -1,4 +1,4 @@
-import { predictWebcam } from "../public/js/prediction.js";
+import { predictWebcam } from "../res/js/prediction.js";
 const analyze_button = document.querySelector("#analyze-button");
 const video_input = document.querySelector("#video-input");
 const video_preview = document.querySelector("#video-preview");

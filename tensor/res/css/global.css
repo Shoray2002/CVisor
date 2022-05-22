@@ -92,7 +92,7 @@ input[type="text"] * {
 }
 
 .content-section-container {
-  padding: 20px 15px;
+  padding: 55px 12px;
 }
 
 .text-centered {
@@ -182,6 +182,9 @@ input[type="text"] * {
 
 .bp-100 {
   padding-bottom: 100px;
+}
+.bp-80 {
+  padding-bottom: 80px;
 }
 
 .tp-80 {
@@ -347,4 +350,3 @@ input[type="text"] * {
     padding-top: 0;
   }
 }
-

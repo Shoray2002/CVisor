@@ -1,4 +1,4 @@
-import { predictWebcam } from "../public/js/prediction.js";
+import { predictWebcam } from "../res/js/prediction.js";
 const image = new Image();
 const image_input = document.querySelector("#image-input");
 const display_image = document.querySelector("#display-image");
