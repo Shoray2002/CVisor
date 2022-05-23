@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Multiple object detection using TensorFlow.js</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="./webcam.css" />
-  </head>
-  <body>
-    <h1>Live Feed</h1>
-    <section id="demos" class="invisible">
-      <button id="webcamButton" class="btn-77">Enable Webcam</button>
-      <button id="start">Analyze the Stream</button>
 
-      <div id="liveView" class="camView">
+<head>
+  <title>Face Detection</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="./webcam.css" />
+</head>
+
+<body>
+  <h1>Live Feed</h1>
+  <section class="invisible">
+    <div class="display">
+      <div id="wrapper">
         <video id="webcam" autoplay muted width="640" height="480"></video>
-        <p id="frame" style="display: none"></p>
-        <div id="box" style="display: none"></div>
+        <canvas id="canvas"></canvas>
       </div>
-    </section>
-    <script src="../../res/js/tf.min.js" type="text/javascript"></script>
-    <script src="../../res/js/blazeface.js"></script>
-    <script src="./webcam.js" type="module"></script>
-  </body>
+    </div>
+    <div class="controls">
+      <button id="webcamButton">Enable Webcam</button>
+      <button id="start">Analyze the Stream</button>
+    </div>
+  </section>
+  <script src="../../res/js/tf.min.js" type="text/javascript"></script>
+  <script src="../../res/js/blazeface.js"></script>
+  <script src="./webcam.js" type="module"></script>
+</body>
+
 </html>

@@ -2,79 +2,33 @@ body {
   font-family: helvetica, arial, sans-serif;
   margin: 2em;
   color: #3d3d3d;
+  background-color: #000000;
 }
-
 h1 {
   font-style: italic;
-  color: #ff6f00;
+  color: #00c67d;
 }
-
-video {
-  display: block;
-}
-
 section {
   opacity: 1;
   transition: opacity 500ms ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .removed {
   display: none;
 }
-
 .invisible {
   opacity: 0.2;
 }
 
-.camView {
-  position: relative;
-  float: left;
-  width: calc(100% - 20px);
-  margin: 10px;
-  cursor: pointer;
+#wrapper {
+  display: grid;
 }
-
-p {
-  position: absolute;
-  padding: 5px;
-  background-color: #ff6f003f;
-  color: #fff;
-  border: 1px dashed rgba(255, 255, 255, 0.7);
-  z-index: 2;
-  font-size: 12px;
-}
-
-.highlighter {
-  background: rgba(0, 255, 0, 0.25);
-  border: 1px dashed #fff;
-  z-index: 1;
-  position: absolute;
-}
-#liveView {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-.btn-77 {
-  display: block;
-  box-sizing: border-box;
-  padding: 20px 30px;
-  border-radius: 999px;
-
-  position: relative;
-  overflow: hidden;
-
-  font-weight:500;
-  text-transform: uppercase;
-  border: 1px solid currentColor;
-
-  box-shadow: 0 0 0 0.2em transparent;
-  animation: pulse 0.8s  infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgb(0, 0, 0);
-  }
+video,
+canvas {
+  grid-column: 1;
+  grid-row: 1;
 }

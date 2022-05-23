@@ -1,10 +1,9 @@
 import { predictWebcam } from "../res/js/prediction.js";
 const image = new Image();
 const image_input = document.querySelector("#image-input");
-const display_image = document.querySelector("#display-image");
 const analyze_button = document.querySelector("#analyze-button");
-const frame = document.getElementById("frame");
-const box = document.getElementById("box");
+const canvas = document.getElementById("canvas");
+let ctx;
 const imageMetadata = {};
 image_input.addEventListener("change", function () {
   const reader = new FileReader();
@@ -14,11 +13,12 @@ image_input.addEventListener("change", function () {
     image.addEventListener("load", () => {
       imageMetadata.width = image.width;
       imageMetadata.height = image.height;
-      display_image.style.height = `${image.height}px`;
-      display_image.style.width = `${image.width}px`;
-      display_image.style.backgroundImage = `url(${uploaded_image})`;
+      // draw image on canvas
+      canvas.width = image.width;
+      canvas.height = image.height;
+      ctx = canvas.getContext("2d");
+      ctx.drawImage(image, 0, 0, image.width, image.height);
     });
-    console.log(image);
   });
   reader.readAsDataURL(this.files[0]);
 });
@@ -38,6 +38,6 @@ analyze_button.addEventListener("click", function () {
 });
 
 function startDrawing() {
-  predictWebcam(model, image, frame, box, imageMetadata);
+  predictWebcam(model, image, ctx, imageMetadata);
   // window.requestAnimationFrame(startDrawing);
 }
