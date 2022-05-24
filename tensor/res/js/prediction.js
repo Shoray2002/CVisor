@@ -18,7 +18,7 @@ async function predictWebcam(model, source, ctx, metadata) {
         pred.bottomRight[1] - pred.topLeft[1]
       );
       ctx.stroke();
-      ctx.fillStyle = "whitesmoke";
+      ctx.fillStyle = "black";
       pred.landmarks.forEach((landmark) => {
         ctx.fillRect(landmark[0], landmark[1], 5, 5);
       });
@@ -38,6 +38,7 @@ async function predictWebcam(model, source, ctx, metadata) {
         pred.bottomRight[1] - 10
       );
     }
+    console.log(pred.probability * 100 + "%");
   }
 }
 
