@@ -22,7 +22,6 @@ async function predictWebcam(model, source, ctx, metadata) {
       pred.landmarks.forEach((landmark) => {
         ctx.fillRect(landmark[0], landmark[1], 5, 5);
       });
-
       ctx.font = "24px Arial";
       ctx.fillStyle = "white";
       ctx.fillText(
