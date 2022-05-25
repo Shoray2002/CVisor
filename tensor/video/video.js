@@ -16,6 +16,7 @@ video_preview.addEventListener("loadedmetadata", function () {
   metadata.width = this.videoWidth;
   metadata.height = this.videoHeight;
   aspect_ratio = this.videoWidth / this.videoHeight;
+  console.log(aspect_ratio);
   canvas.width = this.videoWidth;
   canvas.height = this.videoHeight;
   canvas.style.transformOrigin = "0 0";

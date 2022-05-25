@@ -29,6 +29,11 @@ section {
 }
 video,
 canvas {
-  grid-column: 1;
+  /* in the center  */
+  grid-column: 2;
   grid-row: 1;
+}
+
+canvas{
+  pointer-events: none;
 }
