@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="./dashboard.css" />
 </head>
 
-<body>
+<body class="preload">
   <div class="outer-container">
     <div class="top-bar">
       <h3 class="title"><span class="header-bold">CV</span>isor</h3>
@@ -73,6 +73,21 @@
   <div class="load-wrapper">
     <span class="loader"><span class="loader-inner"></span></span>
   </div>
+  <script>
+    const body = document.querySelector("body");
+    const loader = document.querySelector(".load-wrapper");
+    // start timer
+    const start = new Date().getTime();
+    window.addEventListener("load", function () {
+      // stop timer
+      const end = new Date().getTime();
+      // show difference
+      const time = end - start;
+      console.log(`Page took ${time} milliseconds to load.`);
+      body.classList.remove("preload");
+      loader.style.display = "none";
+    });
+  </script>
   <script src="./dashboard.js"></script>
 </body>
 

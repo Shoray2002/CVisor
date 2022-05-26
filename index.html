@@ -93,10 +93,15 @@
   </div>
 </body>
 <script>
-  const body = document.querySelector('body');
-  const loader = document.querySelector('.load-wrapper');
+  const body = document.querySelector("body");
+  const loader = document.querySelector(".load-wrapper");
+  // start timer
+  const start = new Date().getTime();
   window.addEventListener("load", function () {
-    body.classList.remove('preload');
+    const end = new Date().getTime();
+    const time = end - start;
+    console.log(`Page took ${time} milliseconds to load.`);
+    body.classList.remove("preload");
     loader.style.display = "none";
   });
 </script>
