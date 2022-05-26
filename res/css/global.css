@@ -5,7 +5,7 @@
 body {
   min-width: 100%;
   min-height: 100vh;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   background: linear-gradient(7.28deg, #d1e1f8 0%, #ffffff 99.69%);
 }
 
@@ -78,7 +78,6 @@ ul li {
 .website:hover {
   text-decoration: underline;
 }
-
 
 .header-bold {
   font-weight: 700;
@@ -354,5 +353,86 @@ ul li {
     text-align: left;
     margin-top: 0;
     padding-top: 0;
+  }
+}
+
+
+/* loader */
+
+
+.preload {
+  overflow: hidden;
+}
+
+.load-wrapper {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #e4f0ff;
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+}
+.loader {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  border: 4px solid #111235;
+  top: 50%;
+  animation: loader 2s infinite ease;
+}
+
+.loader-inner {
+  vertical-align: top;
+  display: inline-block;
+  width: 100%;
+  background-color: #111235;
+  animation: loader-inner 2s infinite ease-in;
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(180deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  75% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-inner {
+  0% {
+    height: 0%;
+  }
+
+  25% {
+    height: 0%;
+  }
+
+  50% {
+    height: 100%;
+  }
+
+  75% {
+    height: 100%;
+  }
+
+  100% {
+    height: 0%;
   }
 }

@@ -9,7 +9,7 @@
   <title>CVisor | Home</title>
 </head>
 
-<body>
+<body class="preload">
   <div class="outer-container">
     <div class="top-bar">
       <h3><span class="header-bold">CV</span>isor</h3>
@@ -88,7 +88,17 @@
       <h5 class="bm-15" style="color:#5c5fb8;">shoryasinghall@gmail.com</h5>
     </footer>
   </div>
+  <div class="load-wrapper">
+    <span class="loader"><span class="loader-inner"></span></span>
+  </div>
 </body>
+<script>
+  const body = document.querySelector('body');
+  const loader = document.querySelector('.load-wrapper');
+  window.addEventListener("load", function () {
+    body.classList.remove('preload');
+    loader.style.display = "none";
+  });
 </script>
 
 </html>
