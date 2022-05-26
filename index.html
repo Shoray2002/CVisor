@@ -104,6 +104,11 @@
     body.classList.remove("preload");
     loader.style.display = "none";
   });
+  // display localstorage data
+  const mask_status = localStorage.getItem("mask");
+  if (!mask_status) {
+    localStorage.setItem("mask", "true");
+  }
 </script>
 
 </html>
