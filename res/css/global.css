@@ -111,6 +111,11 @@ ul li {
   margin: 30px auto;
   font-weight: 600;
   text-align: center;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0, 1.3);
+}
+
+.btn:hover{
+  transform: skew(0deg, -5deg);
 }
 
 .btn-primary {
