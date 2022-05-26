@@ -2,106 +2,76 @@
 <html lang="en">
 
 <head>
-  <title>Multiple object detection using TensorFlow.js</title>
+  <title>CVisor | DashBoard</title>
   <meta charset="utf-8" http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes" />
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <link rel="stylesheet" href="../res/css/global.css" />
   <link rel="stylesheet" href="./dashboard.css" />
 </head>
 
 <body>
-  <!-- <div class="container-fluid bg-white border-bottom">
-    <div class="container">
-      <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-2">
-        <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0  text-decoration-none fs-4 fw-bold">COCO</a>
+  <div class="outer-container">
 
-
-        <div class="col-md-3 text-end">
-          <button type="button">
-            <ion-icon name="person-outline"></ion-icon>
-          </button>
-          <button>
-            <ion-icon name="log-out-outline"></ion-icon>
-          </button>
-        </div>
-      </header>
+    <div class="top-bar">
+      <h3 class="title"><span class="header-bold">CV</span>isor</h3>
+      <ul class="top-menu">
+        <li>&nbsp;</li>
+        <li class="header-bold"><a class="github" href="https://github.com/Shoray2002/CVisor" target="_blank">Github</a>
+        </li>
+      </ul>
     </div>
   </div>
   <div class="container py-4">
     <div class="row g-4 row-cols-1 row-cols-md-2 mb-4">
       <div class="col">
-        <div class="card h-100 bg-info text-dark">
+        <div class="card h-100 more-blue">
           <div class="card-header pb-0">
-            <h3 class="fw-bold my-0">Mask Detection</h3>
+            <h3 class="fw-bold my-0">Video Analysis</h3>
           </div>
           <div class="card-body">
-            <p class="card-text"></p>
+            <p class="card-text">Upload a Video to Analyse</p>
           </div>
-          <div class="card-footer pt-0 bg-info text-white d-flex flex-row justify-content-between align-items-center">
+          <div class="card-footer pt-0 d-flex flex-row justify-content-between align-items-center">
             <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center flex-grow-1">
-              <div>
-                <button class="btn btn-rounded bg-white text-info">Configure</button>
-              </div>
-            </div>
-            <div>
-              <button class="btn btn-rounded bg-dark text-info">Learn More</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card h-100 bg-success text-white">
-          <div class="card-header pb-0">
-            <h3 class="fw-bold my-0">Update your profile</h3>
-          </div>
-          <div class="card-body">
-            <p class="card-text">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.</p>
-          </div>
-          <div
-            class="card-footer pt-0 bg-success text-white d-flex flex-row justify-content-between align-items-center">
-            <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center flex-grow-1">
-              <div class="me-4 d-flex flex-row justify-content-start align-items-center">
-                <i class="zmdi zmdi-accounts-outline fs-4 pe-2"></i>
-                <span class="fw-bold">Get Started</span>
-              </div>
-            </div>
-            <div>
-              <button class="btn btn-rounded bg-white text-success">Update</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="card h-100 bg-konkon text-white mb-4 ex-card-gift">
-      <div class="card-header pb-0">
-        <h3 class="fw-bold my-0">Rewards</h3>
-      </div>
-      <div class="card-body">
-        <p class="card-text">You have 1544 points</p>
-      </div>
-      <div class="card-footer pt-0 text-white d-flex flex-row justify-content-between align-items-center">
-        <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center flex-grow-1"></div>
-        <div>
-          <button class="btn btn-rounded bg-white text-konkon">Redeem</button>
+            </div>
+            <div>
+                <button class="btn btn-rounded video-btn">Start</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div> -->
-  <h1>Mask detection using pre trained model in TensorFlow.js</h1>
-  <button>
-    <a href="/video/">Analyze a Uploaded Video</a>
-  </button>
-  <button>
-    <a href="/webcam/">Analyze a Live Stream</a>
-  </button>
-  <button>
-    <a href="/">redirect</a>
-  </button>
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  <script src="./dashboard.js" defer></script>
+      <div class=" col">
+                  <div class="card h-100 more-purple">
+                    <div class="card-header pb-0">
+                      <h3 class="fw-bold my-0">Live Analysis</h3>
+                    </div>
+                    <div class="card-body">
+                      <p class="card-text">Stream-in a live feed for analysis</p>
+                    </div>
+                    <div class="card-footer pt-0 d-flex flex-row justify-content-between align-items-center">
+                      <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center flex-grow-1">
+                      </div>
+                      <div>
+                        <button class="btn btn-rounded webcam-btn">Start</button>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+
+          <div class="card h-50 mb-4">
+            <div class="card-header pb-0">
+              <h3 class="fw-bold my-0">Settings</h3>
+            </div>
+            <div class="card-body">
+              <p class="card-text">You have 1544 points</p>
+            </div>
+          </div>
+        </div>
+        <script src="./dashboard.js"></script>
 </body>
 
 </html>
