@@ -95,7 +95,6 @@
 <script>
   const body = document.querySelector("body");
   const loader = document.querySelector(".load-wrapper");
-  // start timer
   const start = new Date().getTime();
   window.addEventListener("load", function () {
     const end = new Date().getTime();
@@ -104,7 +103,6 @@
     body.classList.remove("preload");
     loader.style.display = "none";
   });
-  // display localstorage data
   const mask_status = localStorage.getItem("mask");
   if (!mask_status) {
     localStorage.setItem("mask", "true");

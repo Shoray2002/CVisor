@@ -1,13 +1,13 @@
 const title = document.querySelector(".title");
 const video_btn = document.querySelector(".video-btn");
-const webcam_btn = document.querySelector(".webcam-btn");
+const stream_btn = document.querySelector(".stream-btn");
 
 video_btn.addEventListener("click", () => {
   window.location.href = "/video";
 });
 
-webcam_btn.addEventListener("click", () => {
-  window.location.href = "/webcam";
+stream_btn.addEventListener("click", () => {
+  window.location.href = "/stream";
 });
 
 title.addEventListener("click", function () {

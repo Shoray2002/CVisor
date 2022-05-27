@@ -2,6 +2,16 @@ async function makePredictionUsingSingleFrame(model, video) {
   return await model.estimateFaces(video, false);
 }
 
+let mask_status = localStorage.getItem("mask");
+let dist_status = localStorage.getItem("dist");
+let crowd_status = localStorage.getItem("crowd");
+console.log(mask_status, dist_status, crowd_status);
+if (mask_status == "false" && dist_status == "false") {
+  localStorage.setItem("mask", "true");
+  mask_status = true;
+}
+console.log(mask_status, dist_status, crowd_status);
+
 async function predictWebcam(model, source, ctx, metadata) {
   const prediction = await makePredictionUsingSingleFrame(model, source);
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
