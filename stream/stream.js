@@ -3,7 +3,9 @@ const video = document.getElementById("webcam");
 const section = document.querySelector("section");
 const enableWebcamButton = document.getElementById("webcamButton");
 const start = document.getElementById("start");
+const stop = document.getElementById("stop");
 const selection = document.getElementById("select");
+let status;
 const webCamemetadata = {};
 let constraints = {
   video: {
@@ -12,6 +14,7 @@ let constraints = {
   },
 };
 start.disabled = true;
+stop.disabled = true;
 let cameras = [];
 const canvas = document.getElementById("canvas");
 let ctx;
@@ -20,7 +23,6 @@ function getUserMediaSupported() {
 }
 
 if (getUserMediaSupported()) {
-  // select camera
   selection.id = "cameraSelection";
   selection.classList.add("cameraSelection");
   section.appendChild(selection);
@@ -74,7 +76,13 @@ function enableCam() {
 }
 
 start.addEventListener("click", () => {
+  stop.disabled = false;
+  status = true;
   startDrawing();
+});
+stop.addEventListener("click", () => {
+  status = false;
+  stop.disabled = true;
 });
 
 var model = undefined;
@@ -84,6 +92,6 @@ blazeface.load().then(function (loadedModel) {
 });
 
 function startDrawing() {
-  predictWebcam(model, video, ctx, webCamemetadata);
+  predictWebcam(model, video, ctx, webCamemetadata, status);
   requestAnimationFrame(startDrawing);
 }

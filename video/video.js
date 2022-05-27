@@ -1,10 +1,13 @@
 import { predictWebcam } from "../res/js/prediction.js";
-const analyze_button = document.querySelector("#analyze-button");
+const start = document.querySelector("#start");
+const stop = document.querySelector("#stop");
 const video_input = document.querySelector("#video-input");
 const video_preview = document.querySelector("#video-preview");
 const canvas = document.querySelector("#canvas");
 let ctx;
 let aspect_ratio;
+let status;
+stop.disabled = true;
 const metadata = {};
 video_input.addEventListener("change", function () {
   let file = this.files[0];
@@ -32,21 +35,28 @@ video_preview.addEventListener("loadedmetadata", function () {
   // canvas.height = video_preview.height;
   ctx = canvas.getContext("2d");
 });
-analyze_button.addEventListener("click", function () {
+start.addEventListener("click", function () {
   if (!model) {
     return;
   }
+  status = true;
+  stop.disabled = false;
   startDrawing();
   console.log("done");
+});
+
+stop.addEventListener("click", function () {
+  status = false;
+  // stop.disabled = true;
 });
 
 var model = undefined;
 blazeface.load().then(function (loadedModel) {
   model = loadedModel;
-  analyze_button.classList.remove("invisible");
+  start.classList.remove("invisible");
 });
 
 function startDrawing() {
-  predictWebcam(model, video_preview, ctx, metadata);
+  predictWebcam(model, video_preview, ctx, metadata, status);
   window.requestAnimationFrame(startDrawing);
 }
