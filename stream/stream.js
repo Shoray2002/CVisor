@@ -1,5 +1,4 @@
 const video = document.getElementById("webcam");
-const enableWebcamButton = document.getElementById("webcamButton");
 const start = document.getElementById("start");
 const stop = document.getElementById("stop");
 const selection = document.getElementById("select");
@@ -7,8 +6,7 @@ const canvas = document.getElementById("canvas");
 const body = document.querySelector("body");
 const loader = document.querySelector(".load-wrapper");
 let run_status = false;
-const SSD_MOBILENETV1 = "ssd_mobilenetv1";
-let selectedFaceDetector = SSD_MOBILENETV1;
+let selectedCam;
 start.addEventListener("click", () => {
   loadModel();
   run_status = true;
@@ -21,20 +19,38 @@ start.addEventListener("click", () => {
 stop.addEventListener("click", () => {
   run_status = false;
 });
+selection.addEventListener("change", function () {
+  selectedCam = this.value;
+  console.log(selectedCam);
+  setUpCamera();
+});
 
 window.onload = function () {
-  navigator.mediaDevices
-    .getUserMedia({ video: true })
-    .then(function (stream) {
-      video.srcObject = stream;
-      video.play();
-    })
-    .catch(function (err) {
-      console.log("An error occurred: " + err);
+  navigator.mediaDevices.enumerateDevices().then(function (devices) {
+    devices.forEach(function (device) {
+      if (device.kind === "videoinput") {
+        const option = document.createElement("option");
+        option.value = device.deviceId;
+        option.text = device.label || "camera " + selection.length;
+        selection.appendChild(option);
+      }
     });
+  });
+  setUpCamera();
   body.classList.remove("preload");
   loader.style.display = "none";
 };
+
+function setUpCamera() {
+  navigator.mediaDevices
+    .getUserMedia({
+      video: selectedCam ? { deviceId: { exact: selectedCam } } : true,
+    })
+    .then(function (stream) {
+      video.srcObject = stream;
+      video.play();
+    });
+}
 
 async function loadModel() {
   await faceapi.loadSsdMobilenetv1Model("../res/models");
