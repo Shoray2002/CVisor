@@ -8,7 +8,6 @@ const canvas = document.getElementById("canvas");
 let run_status = false;
 const SSD_MOBILENETV1 = "ssd_mobilenetv1";
 let selectedFaceDetector = SSD_MOBILENETV1;
-
 start.addEventListener("click", () => {
   run_status = true;
   onPlay();
@@ -43,7 +42,6 @@ async function onPlay() {
     let task = faceapi.detectAllFaces(video, options);
     // const result = await faceapi.detectSingleFace(video, options);
     const result = await task;
-    console.log(result);
     if (result) {
       const dims = faceapi.matchDimensions(canvas, video, true);
       faceapi.draw.drawDetections(canvas, faceapi.resizeResults(result, dims));
