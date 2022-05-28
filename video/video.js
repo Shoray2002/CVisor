@@ -1,23 +1,9 @@
 const start = document.querySelector("#start");
 const stop = document.querySelector("#stop");
 const video_input = document.querySelector("#video-input");
-const video = document.querySelector("#video-preview");
+const video = document.querySelector("#video");
 const canvas = document.querySelector("#canvas");
 let run_status = false;
-let point_data = [
-  {
-    x: 0.1,
-    y: 5,
-  },
-  {
-    x: 2,
-    y: 4,
-  },
-  {
-    x: 0,
-    y: 7,
-  },
-];
 const SSD_MOBILENETV1 = "ssd_mobilenetv1";
 let selectedFaceDetector = SSD_MOBILENETV1;
 start.addEventListener("click", () => {
@@ -67,7 +53,9 @@ async function analyze() {
       faceapi.draw.drawDetections(canvas, faceapi.resizeResults(result, dims));
     }
     requestAnimationFrame(analyze);
+  } else {
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
   }
-  console.log("analyze");
 }
+
 // isFaceDetectionModelLoaded

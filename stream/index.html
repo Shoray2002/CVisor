@@ -10,7 +10,7 @@
 </head>
 
 <body class="preload">
-  <div class="outer-container">
+  <div class="outer-container ">
     <div class="top-bar">
       <h3 class="title"><span class="header-bold">Stream </span>Analysis</h3>
       <ul class="top-menu">
@@ -21,14 +21,12 @@
     </div>
   </div>
   <section class="invisible">
-    <div class="display">
-      <div id="wrapper">
-        <video id="webcam" autoplay muted width="640" height="480"></video>
-        <canvas id="canvas"></canvas>
-      </div>
+    <div style="position: relative" class="margin wrapper" >
+      <video id="webcam" autoplay muted></video>
+      <canvas id="canvas"></canvas>
     </div>
+    <select id="select"></select>
     <div class="controls">
-      <select id="select"></select>
       <button id="webcamButton">Enable Webcam</button>
       <button id="start">Analyze the Stream</button>
       <button id="stop">Stop</button>
@@ -49,4 +47,5 @@
   <script src="../../res/js/face-api.min.js"></script>
   <script src="./stream.js" type="module"></script>
 </body>
+
 </html>

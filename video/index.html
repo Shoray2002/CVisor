@@ -22,11 +22,9 @@
   </div>
   <section>
     <input type="file" id="video-input" accept="video/mp4, video/x-m4v, video/*" />
-    <div class="display">
-      <div id="wrapper">
-        <video id="video-preview" controls muted autoplay></video>
-        <canvas id="canvas"></canvas>
-      </div>
+    <div style="position: relative" class="margin wrapper">
+      <video id="video" autoplay muted></video>
+      <canvas id="canvas"></canvas>
     </div>
     <div class="controls">
       <button id="start">
@@ -47,7 +45,6 @@
     });
   </script>
   <script src="../res/js/face-api.min.js"></script>
-  <script type="text/javascript" src="../res/js/jDBSCAN.js"></script>
   <script src="./video.js" type="module"></script>
 </body>
 

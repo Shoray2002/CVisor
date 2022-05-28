@@ -6,7 +6,15 @@ section {
   align-items: center;
   justify-content: center;
 }
-
+.margin {
+  margin: 20px;
+}
+#canvas,
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 .removed {
   display: none;
 }
@@ -14,15 +22,15 @@ section {
   opacity: 0.2;
 }
 
-#wrapper {
-  display: grid;
-}
-video,
-canvas {
-  grid-column: 1;
-  grid-row: 1;
-}
-
 canvas {
   pointer-events: none;
+}
+
+@media screen and (max-width: 600px) {
+  .margin {
+    margin: 10px;
+  }
+  .wrapper{
+    transform: scale(0.5);
+  }
 }
