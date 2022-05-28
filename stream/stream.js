@@ -1,97 +1,93 @@
-import { predictWebcam } from "../res/js/prediction.js";
 const video = document.getElementById("webcam");
 const section = document.querySelector("section");
 const enableWebcamButton = document.getElementById("webcamButton");
 const start = document.getElementById("start");
 const stop = document.getElementById("stop");
 const selection = document.getElementById("select");
-let status;
-const webCamemetadata = {};
-let constraints = {
-  video: {
-    facingMode: "environment",
-    deviceId: webCamemetadata.deviceId ? webCamemetadata.deviceId : undefined,
-  },
-};
-start.disabled = true;
-stop.disabled = true;
-let cameras = [];
 const canvas = document.getElementById("canvas");
-let ctx;
-function getUserMediaSupported() {
-  return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
-}
+let model_status = false;
 
-if (getUserMediaSupported()) {
-  selection.id = "cameraSelection";
-  selection.classList.add("cameraSelection");
-  section.appendChild(selection);
-  navigator.mediaDevices.getUserMedia(constraints);
-  enableWebcamButton.addEventListener("click", enableCam);
-} else {
-  console.warn("getUserMedia() is not supported by your browser");
-}
-
-selection.addEventListener("change", function (event) {
-  webCamemetadata.deviceId = event.target.value;
-  enableCam();
-});
-
-function enableCam() {
-  if (!model) {
-    return;
-  }
-  enableWebcamButton.classList.add("removed");
-  constraints = {
-    video: {
-      facingMode: "environment",
-      deviceId: webCamemetadata.deviceId ? webCamemetadata.deviceId : undefined,
-    },
-  };
-  navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-    webCamemetadata.width = stream.getVideoTracks()[0].getSettings().width;
-    webCamemetadata.height = stream.getVideoTracks()[0].getSettings().height;
-    video.srcObject = stream;
-    canvas.width = webCamemetadata.width;
-    canvas.height = webCamemetadata.height;
-    ctx = canvas.getContext("2d");
-    start.disabled = false;
-  });
-  navigator.mediaDevices
-    .enumerateDevices()
-    .then((devices) => {
-      devices.forEach((device) => {
-        if (device.kind === "videoinput") {
-          cameras.push(device);
-          const option = document.createElement("option");
-          option.value = device.deviceId;
-          option.text = device.label;
-          selection.appendChild(option);
-        }
-      });
-    })
-    .catch((err) => {
-      console.log(err.name + ": " + err.message);
-    });
-}
-
-start.addEventListener("click", () => {
-  stop.disabled = false;
-  status = true;
-  startDrawing();
-});
 stop.addEventListener("click", () => {
-  status = false;
-  stop.disabled = true;
+  onPlay();
 });
 
-var model = undefined;
-blazeface.load().then(function (loadedModel) {
-  model = loadedModel;
+window.onload = function () {
+  loadModel();
+  console.log("Model loaded");
+  navigator.mediaDevices
+    .getUserMedia({ video: true })
+    .then(function (stream) {
+      video.srcObject = stream;
+      video.play();
+    })
+    .catch(function (err) {
+      console.log("An error occurred: " + err);
+    });
   section.classList.remove("invisible");
-});
+};
 
-function startDrawing() {
-  predictWebcam(model, video, ctx, webCamemetadata, status);
-  requestAnimationFrame(startDrawing);
+async function loadModel() {
+  await faceapi.loadTinyFaceDetectorModel(
+    "https://www.rocksetta.com/tensorflowjs/saved-models/face-api-js/"
+  );
+  await faceapi.loadFaceLandmarkTinyModel(
+    "https://www.rocksetta.com/tensorflowjs/saved-models/face-api-js/"
+  );
+}
+
+function resizeCanvasAndResults(dimensions, canvas, results) {
+  console.log(dimensions);
+  dimensions instanceof HTMLVideoElement
+    ? faceapi.getMediaDimensions(dimensions)
+    : dimensions;
+  const width = faceapi.getMediaDimensions(dimensions)._width;
+  const height = faceapi.getMediaDimensions(dimensions)._height;
+  console.log(width, height);
+  canvas.width = width;
+  canvas.height = height;
+  return results.map((res) => res.forSize(width, height));
+}
+
+function drawDetections(dimensions, canvas, detections) {
+  const resizedDetections = resizeCanvasAndResults(
+    dimensions,
+    canvas,
+    detections
+  );
+  faceapi.drawDetection(canvas, resizedDetections);
+}
+function drawLandmarks(dimensions, canvas, results, withBoxes = false) {
+  const resizedResults = resizeCanvasAndResults(dimensions, canvas, results);
+  const drawBoxParams = {
+    lineWidth: 2,
+  };
+  if (withBoxes) {
+    console.log("with");
+    faceapi.drawDetection(
+      canvas,
+      resizedResults.map((det) => det.detection),
+      drawBoxParams
+    );
+  }
+}
+
+async function onPlay() {
+  const options = new faceapi.TinyFaceDetectorOptions({
+    inputSize: 128,
+    scoreThreshold: 0.3,
+  });
+  let result = await faceapi
+    .detectSingleFace(video, options)
+    .withFaceLandmarks(true);
+  if (result) {
+    drawLandmarks(video, canvas, [result], true);
+    // document.getElementById("myDiv01").innerHTML =
+    //   "First of 68 face landmarks, x: " +
+    //   Math.round(result._unshiftedLandmarks._positions[0]._x) +
+    //   ", y: " +
+    //   Math.round(result._unshiftedLandmarks._positions[0]._y) +
+    //   "<br>";
+  }
+
+  setTimeout(() => onPlay());
 }
