@@ -20,8 +20,8 @@
       </ul>
     </div>
   </div>
-  <section class="invisible">
-    <div style="position: relative" class="margin wrapper" >
+  <section>
+    <div style="position: relative" class="margin wrapper">
       <video id="webcam" autoplay muted></video>
       <canvas id="canvas"></canvas>
     </div>
@@ -35,14 +35,6 @@
   <div class="load-wrapper">
     <span class="loader"><span class="loader-inner"></span></span>
   </div>
-  <script>
-    const body = document.querySelector('body');
-    const loader = document.querySelector('.load-wrapper');
-    window.addEventListener("load", function () {
-      body.classList.remove('preload');
-      loader.style.display = "none";
-    });
-  </script>
   <!-- <script src="../../res/js/tf.min.js" type="text/javascript"></script> -->
   <script src="../../res/js/face-api.min.js"></script>
   <script src="./stream.js" type="module"></script>

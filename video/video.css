@@ -30,7 +30,7 @@ canvas {
   .margin {
     margin: 10px;
   }
-  .wrapper{
-    transform: scale(0.5);
+  .wrapper {
+    transform: scale(0.7);
   }
 }

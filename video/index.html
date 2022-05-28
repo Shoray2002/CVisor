@@ -23,7 +23,7 @@
   <section>
     <input type="file" id="video-input" accept="video/mp4, video/x-m4v, video/*" />
     <div style="position: relative" class="margin wrapper">
-      <video id="video" autoplay muted></video>
+      <video id="video" autoplay muted controls></video>
       <canvas id="canvas"></canvas>
     </div>
     <div class="controls">
@@ -36,14 +36,6 @@
   <div class="load-wrapper">
     <span class="loader"><span class="loader-inner"></span></span>
   </div>
-  <script>
-    const body = document.querySelector('body');
-    const loader = document.querySelector('.load-wrapper');
-    window.addEventListener("load", function () {
-      body.classList.remove('preload');
-      loader.style.display = "none";
-    });
-  </script>
   <script src="../res/js/face-api.min.js"></script>
   <script src="./video.js" type="module"></script>
 </body>
