@@ -120,7 +120,7 @@ Distributed under the MIT License. See [`LICENSE.txt`](/LICENSE.txt) for more in
 <!-- CONTACT -->
 ## Contact
 
-Shoray - [@your_twitter](https://twitter.com/your_username) - shoryasinghall@gmail.com
+Shoray - [@ShoraySinghal](https://twitter.com/ShoraySinghal) - shoryasinghall@gmail.com
 
 Deployment Link: [CVisor](https://cvisor.netlify.app/)
 
