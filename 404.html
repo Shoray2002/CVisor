@@ -26,23 +26,29 @@
 </head>
 
 <body class="preload">
+    <!-- main  -->
     <div class="container">
         <img src="https://http.cat/404" />
         <a class="btn btn-primary" href="/">HOME</a>
     </div>
+    <!-- loader -->
     <div class="load-wrapper">
         <span class="loader"><span class="loader-inner"></span></span>
     </div>
 </body>
-<script>const body = document.querySelector("body");
+
+<script>
+    // script for loader animation  
+    const body = document.querySelector("body");
     const loader = document.querySelector(".load-wrapper");
     const start = new Date().getTime();
+    // script for calculating time taken to load page
     window.addEventListener("load", function () {
         const end = new Date().getTime();
         const time = end - start;
         console.log(`Page took ${time} milliseconds to load.`);
         loader.style.display = "none";
-    });</script>
-
+    });
+</script>
 
 </html>

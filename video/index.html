@@ -10,6 +10,7 @@
 </head>
 
 <body class="preload">
+  <!-- navbar -->
   <div class="outer-container">
     <div class="top-bar">
       <h3 class="title"><span class="header-bold">Video</span>Analysis</h3>
@@ -21,11 +22,14 @@
     </div>
   </div>
   <section>
+    <!-- file upload -->
     <input type="file" id="video-input" accept="video/mp4, video/x-m4v, video/*" />
+    <!-- video playback -->
     <div style="position: relative" class="margin wrapper">
       <video id="video" autoplay muted controls loop></video>
       <canvas id="canvas"></canvas>
     </div>
+    <!-- analysis controls -->
     <div class="controls">
       <button id="start">
         Start Analysis
@@ -33,6 +37,7 @@
       <button id="stop">Stop</button>
     </div>
   </section>
+  <!-- loader -->
   <div class="load-wrapper">
     <span class="loader"><span class="loader-inner"></span></span>
   </div>

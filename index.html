@@ -10,6 +10,7 @@
 </head>
 
 <body class="preload">
+  <!-- navbar -->
   <div class="outer-container">
     <div class="top-bar">
       <h3><span class="header-bold">CV</span>isor</h3>
@@ -20,6 +21,7 @@
       </ul>
     </div>
 
+    <!-- banner -->
     <div class="content-section-container text-centered bp-100 hero-section">
       <img src="res/images/cctv.png" />
       <div class="hero-text">
@@ -33,6 +35,7 @@
       </div>
     </div>
   </div>
+  <!-- features -->
   <div class="bp-80"></div>
   <div class="outer-container">
     <div class="simple-flex">
@@ -88,14 +91,17 @@
       <h5 class="bm-15" style="color:#5c5fb8;">shoryasinghall@gmail.com</h5>
     </footer>
   </div>
+  <!-- loader -->
   <div class="load-wrapper">
     <span class="loader"><span class="loader-inner"></span></span>
   </div>
 </body>
 <script>
+  // script for loader animation  
   const body = document.querySelector("body");
   const loader = document.querySelector(".load-wrapper");
   const start = new Date().getTime();
+  // script for calculating time taken to load page
   window.addEventListener("load", function () {
     const end = new Date().getTime();
     const time = end - start;

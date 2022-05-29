@@ -10,6 +10,7 @@
 </head>
 
 <body class="preload">
+  <!-- navbar -->
   <div class="outer-container ">
     <div class="top-bar">
       <h3 class="title"><span class="header-bold">Stream </span>Analysis</h3>
@@ -21,16 +22,20 @@
     </div>
   </div>
   <section>
+    <!-- video playback -->
     <div style="position: relative" class="margin wrapper">
       <video id="webcam" autoplay muted></video>
       <canvas id="canvas"></canvas>
     </div>
+    <!-- camera selection -->
     <select id="select"></select>
+    <!-- analysis controls -->
     <div class="controls">
       <button id="start">Analyze the Stream</button>
       <button id="stop">Stop</button>
     </div>
   </section>
+  <!-- loader -->
   <div class="load-wrapper">
     <span class="loader"><span class="loader-inner"></span></span>
   </div>
