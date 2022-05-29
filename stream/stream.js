@@ -8,9 +8,7 @@ const loader = document.querySelector(".load-wrapper");
 let run_status = false;
 let crowd_status = localStorage.getItem("crowd");
 let selectedCam, mask_model;
-const URL = "https://teachablemachine.withgoogle.com/models/wJeEWVm8t/";
-const modelURL = URL + "model.json";
-const metadataURL = URL + "metadata.json";
+const model_URL = "https://teachablemachine.withgoogle.com/models/wJeEWVm8t/";
 start.addEventListener("click", () => {
   loadModel();
   run_status = true;
@@ -23,9 +21,9 @@ start.addEventListener("click", () => {
 stop.addEventListener("click", () => {
   run_status = false;
 });
+
 selection.addEventListener("change", function () {
   selectedCam = this.value;
-  console.log(selectedCam);
   setUpCamera();
 });
 
@@ -58,7 +56,7 @@ function setUpCamera() {
 
 async function loadModel() {
   await faceapi.loadSsdMobilenetv1Model("../res/models");
-  mask_model = await ml5.imageClassifier(URL + "model.json");
+  mask_model = await ml5.imageClassifier(model_URL + "model.json");
 }
 
 async function analyze() {
