@@ -74,22 +74,42 @@ async function analyze() {
       task = faceapi.detectSingleFace(video, options);
     }
     result = await task;
+    const dims = faceapi.matchDimensions(canvas, video, true);
+    const resizedResults = faceapi.resizeResults(result, dims);
     const facesCallback = faceapi.extractFaces(video, result);
     const faces = await facesCallback;
     if (result && faces.length > 0) {
-      console.log(faces);
-      mask_model.classify(faces[0], (err, results) => {
-        console.log(results);
+      faces.forEach((face, i) => {
+        var faceStatus;
+        const faceCordinates = resizedResults[i]["_box"];
+        const box = {
+          x: faceCordinates._x,
+          y: faceCordinates._y,
+          width: faceCordinates._width,
+          height: faceCordinates._height,
+        };
+        let ctx = canvas.getContext("2d");
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.rect(box.x, box.y, box.width, box.height);
+        ctx.stroke();
+        ctx.textAlign = "start";
+        ctx.textBaseline = "bottom";
+        ctx.font = "bold 12px verdana, sans-serif";
+        mask_model.classify(face, (err, verdict) => {
+          faceStatus = verdict[0].label.toString();
+          ctx.fillStyle = faceStatus === "With_Mask" ? "green" : "red";
+          ctx.fillText(faceStatus, box.x, box.y);
+        });
       });
-      const dims = faceapi.matchDimensions(canvas, video, true);
-      faceapi.draw.drawDetections(canvas, faceapi.resizeResults(result, dims));
     }
     requestAnimationFrame(analyze);
   } else if (!faceapi.nets.ssdMobilenetv1.params) {
-    console.log("Model not loaded");
+    console.log("FACE DETECTION MODEL not loaded");
     requestAnimationFrame(analyze);
   } else if (!mask_model) {
-    console.log("mask not loaded");
+    console.log("MASK CLASSIFIER MODEL not loaded");
     requestAnimationFrame(analyze);
   } else {
     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);

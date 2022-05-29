@@ -103,18 +103,9 @@
     body.classList.remove("preload");
     loader.style.display = "none";
   });
-  const mask_status = localStorage.getItem("mask");
-  const dist_status = localStorage.getItem("dist");
   const crowd_status = localStorage.getItem("crowd");
-  if (!mask_status) {
-    localStorage.setItem("mask", "true");
-  }
-  if (!dist_status) {
-    localStorage.setItem("dist", "false");
-  }
   if (!crowd_status) {
     localStorage.setItem("crowd", "false");
   }
 </script>
-
 </html>

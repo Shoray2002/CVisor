@@ -63,20 +63,12 @@
 
     <div class="card h-50 mb-4">
       <div class="card-header pb-0">
-        <h3 class="fw-bold my-0">Settings</h3>
+        <h3 class="fw-bold my-0">Enable Multi Face Function</h3>
       </div>
       <div class="card-body">
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="mask">
-          <label class="form-check-label" for="inlineCheckbox1">Face Mask Detection</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="dist">
-          <label class="form-check-label" for="inlineCheckbox2">Social Distancing Detection</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="crowd">
-          <label class="form-check-label" for="inlineCheckbox3">Crowd Support</label>
+          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="crowd">
+          <label class="form-check-label" for="inlineCheckbox1">Crowd Support</label>
         </div>
       </div>
     </div>
@@ -88,8 +80,6 @@
     const body = document.querySelector("body");
     const loader = document.querySelector(".load-wrapper");
     const checkbox_1 = document.querySelector("#inlineCheckbox1");
-    const checkbox_2 = document.querySelector("#inlineCheckbox2");
-    const checkbox_3 = document.querySelector("#inlineCheckbox3");
 
     const start = new Date().getTime();
     window.addEventListener("load", function () {
@@ -99,24 +89,12 @@
       body.classList.remove("preload");
       loader.style.display = "none";
     });
-    if (localStorage.getItem("mask") == "true") {
-      checkbox_1.checked = true;
-    }
-    if (localStorage.getItem("dist") == "true") {
-      checkbox_2.checked = true;
-    }
     if (localStorage.getItem("crowd") == "true") {
-      checkbox_3.checked = true;
+      checkbox_1.checked = true;
     }
 
     checkbox_1.addEventListener("change", function () {
-      localStorage.setItem("mask", checkbox_1.checked);
-    });
-    checkbox_2.addEventListener("change", function () {
-      localStorage.setItem("dist", checkbox_2.checked);
-    });
-    checkbox_3.addEventListener("change", function () {
-      localStorage.setItem("crowd", checkbox_3.checked);
+      localStorage.setItem("crowd", checkbox_1.checked);
     });
 
 
