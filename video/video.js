@@ -7,7 +7,6 @@ const body = document.querySelector("body");
 const loader = document.querySelector(".load-wrapper");
 const model_URL = "https://teachablemachine.withgoogle.com/models/wJeEWVm8t/";
 let run_status = false;
-let crowd_status = localStorage.getItem("crowd");
 let mask_model;
 start.addEventListener("click", () => {
   loadModel();
@@ -26,9 +25,14 @@ window.onload = function () {
     let file = this.files[0];
     let blobURL = URL.createObjectURL(file);
     video.src = blobURL;
-    // canvas.width = video.videoWidth;
-    // canvas.height = video.videoHeight;
-    // set canvas size to video element size
+    if (video.videoWidth > 640) {
+      video.width = 640;
+    }
+    if (video.videoHeight > 480) {
+      video.height = 480;
+    }
+
+    video.playbackRate = 0.25;
     canvas.width = video.width;
     canvas.height = video.height;
   });
@@ -48,13 +52,7 @@ async function analyze() {
     let minConfidence = 0.3;
     const options = new faceapi.SsdMobilenetv1Options({ minConfidence });
     let result, task;
-    if (crowd_status === "true") {
-      console.log("Detect All Faces");
-      task = faceapi.detectAllFaces(video, options);
-    } else {
-      console.log("Detecting Single Face");
-      task = faceapi.detectSingleFace(video, options);
-    }
+    task = faceapi.detectAllFaces(video, options);
     result = await task;
     const dims = faceapi.matchDimensions(canvas, video, true);
     const resizedResults = faceapi.resizeResults(result, dims);

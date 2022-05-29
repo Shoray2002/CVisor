@@ -7,7 +7,6 @@ let ctx = canvas.getContext("2d");
 const body = document.querySelector("body");
 const loader = document.querySelector(".load-wrapper");
 let run_status = false;
-let crowd_status = localStorage.getItem("crowd");
 let selectedCam, mask_model;
 const model_URL = "https://teachablemachine.withgoogle.com/models/wJeEWVm8t/";
 start.addEventListener("click", () => {
@@ -68,11 +67,7 @@ async function analyze() {
     let minConfidence = 0.3;
     const options = new faceapi.SsdMobilenetv1Options({ minConfidence });
     let result, task;
-    if (crowd_status === "true") {
-      task = faceapi.detectAllFaces(video, options);
-    } else {
-      task = faceapi.detectSingleFace(video, options);
-    }
+    task = faceapi.detectAllFaces(video, options);
     result = await task;
     const dims = faceapi.matchDimensions(canvas, video, true);
     const resizedResults = faceapi.resizeResults(result, dims);

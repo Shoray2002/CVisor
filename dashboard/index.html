@@ -60,18 +60,6 @@
         </div>
       </div>
     </div>
-
-    <div class="card h-50 mb-4">
-      <div class="card-header pb-0">
-        <h3 class="fw-bold my-0">Enable Multi Face Function</h3>
-      </div>
-      <div class="card-body">
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="crowd">
-          <label class="form-check-label" for="inlineCheckbox1">Crowd Support</label>
-        </div>
-      </div>
-    </div>
   </div>
   <div class="load-wrapper">
     <span class="loader"><span class="loader-inner"></span></span>
@@ -79,8 +67,6 @@
   <script>
     const body = document.querySelector("body");
     const loader = document.querySelector(".load-wrapper");
-    const checkbox_1 = document.querySelector("#inlineCheckbox1");
-
     const start = new Date().getTime();
     window.addEventListener("load", function () {
       const end = new Date().getTime();
@@ -89,15 +75,6 @@
       body.classList.remove("preload");
       loader.style.display = "none";
     });
-    if (localStorage.getItem("crowd") == "true") {
-      checkbox_1.checked = true;
-    }
-
-    checkbox_1.addEventListener("change", function () {
-      localStorage.setItem("crowd", checkbox_1.checked);
-    });
-
-
   </script>
   <script src="./dashboard.js"></script>
 </body>
