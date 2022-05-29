@@ -6,9 +6,9 @@ const canvas = document.querySelector("#canvas");
 const body = document.querySelector("body");
 const loader = document.querySelector(".load-wrapper");
 let run_status = false;
-const SSD_MOBILENETV1 = "ssd_mobilenetv1";
-let selectedFaceDetector = SSD_MOBILENETV1;
+let crowd_status = localStorage.getItem("crowd");
 start.addEventListener("click", () => {
+  loadModel();
   run_status = true;
   analyze();
   body.classList.add("preload");
@@ -29,8 +29,6 @@ stop.addEventListener("click", () => {
 // });
 
 window.onload = function () {
-  loadModel();
-  console.log("Model loaded");
   video_input.addEventListener("change", function () {
     let file = this.files[0];
     let blobURL = URL.createObjectURL(file);
@@ -53,8 +51,14 @@ async function analyze() {
     console.log("Model loaded");
     let minConfidence = 0.3;
     const options = new faceapi.SsdMobilenetv1Options({ minConfidence });
-    let task = faceapi.detectAllFaces(video, options);
-    const result = await task;
+    let result, task;
+    if (crowd_status === "true") {
+      task = faceapi.detectAllFaces(video, options);
+    } else {
+      task = faceapi.detectSingleFace(video, options);
+    }
+    result = await task;
+    console.log(task);
     if (result) {
       const dims = faceapi.matchDimensions(canvas, video, true);
       faceapi.draw.drawDetections(canvas, faceapi.resizeResults(result, dims));
