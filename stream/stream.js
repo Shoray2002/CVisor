@@ -3,6 +3,7 @@ const start = document.getElementById("start");
 const stop = document.getElementById("stop");
 const selection = document.getElementById("select");
 const canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
 const body = document.querySelector("body");
 const loader = document.querySelector(".load-wrapper");
 let run_status = false;
@@ -32,6 +33,7 @@ window.onload = function () {
     devices.forEach(function (device) {
       if (device.kind === "videoinput") {
         const option = document.createElement("option");
+        option.id = "option";
         option.value = device.deviceId;
         option.text = device.label || "camera " + selection.length;
         selection.appendChild(option);
@@ -86,7 +88,7 @@ async function analyze() {
           width: faceCordinates._width,
           height: faceCordinates._height,
         };
-        let ctx = canvas.getContext("2d");
+
         ctx.strokeStyle = "blue";
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -110,6 +112,6 @@ async function analyze() {
     console.log("MASK CLASSIFIER MODEL not loaded");
     requestAnimationFrame(analyze);
   } else {
-    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 }

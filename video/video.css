@@ -25,6 +25,20 @@ section {
 canvas {
   pointer-events: none;
 }
+video {
+  border-radius: 5px;
+  box-shadow: 0 0 10px #292929;
+}
+#start,
+#stop,
+#video-input {
+  border: 1px solid #62a6cd;
+  outline: none;
+  border-radius: 5px;
+  padding: 15px;
+  margin: 5px;
+  background-color: #a1c6fa;
+}
 
 @media screen and (max-width: 600px) {
   .margin {
@@ -32,5 +46,12 @@ canvas {
   }
   .wrapper {
     transform: scale(0.7);
+  }
+
+  #start,
+  #stop,
+  #video-input {
+    padding: 5px;
+    margin: 0px;
   }
 }
