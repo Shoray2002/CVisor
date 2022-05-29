@@ -99,6 +99,16 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Model
+Models I used
+- [Face Detection](https://github.com/justadudewhohacks/face-api.js-models/tree/master/ssd_mobilenetv1)
+- [Mask Classifier](https://teachablemachine.withgoogle.com/models/wJeEWVm8t/)
+
+## Blog 
+Checkout the blog where I write how I made this project 
+
+[CVisor](https://dev.to/shoray2002/cvisor-using-computer-vision-to-stop-covid-19-10ka)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- LICENSE -->
 ## License
@@ -106,10 +116,6 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 Distributed under the MIT License. See [`LICENSE.txt`](/LICENSE.txt) for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-## Blog 
-Checkout the blog where I write how I made this project 
-[CVisor](https://dev.to/shoray2002/cvisor-using-computer-vision-to-stop-covid-19-10ka)
 
 <!-- CONTACT -->
 ## Contact
