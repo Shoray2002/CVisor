@@ -25,6 +25,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
+    <li><a href="#demo">Demo</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#model">Model</a></li>
     <li><a href="#blog">Blog</a></li>
@@ -86,21 +87,31 @@ _Below is an example of how you can instruct your audience on installing and set
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<!-- DEMO -->
+## Demo
+Checkout this project demo [here](https://youtu.be/KA11Fvv025c)
 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 Examples 
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+![ujh5hoov9l8l3svpirgb](https://user-images.githubusercontent.com/76423272/170884713-2b285002-2e25-4446-90c9-6b68427ce5ed.gif)
+![second](https://user-images.githubusercontent.com/76423272/170884866-19c23aa6-d382-4ef3-9146-d78f4dc75e12.gif)
+![Screencast from 29-05-22 11_34_12 PM IST (1)](https://user-images.githubusercontent.com/76423272/170885153-85534867-d239-4c3f-bba9-9cc70e3023f8.gif)
+
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+
+<!-- MODEL -->
 ## Model
 Models I used
 - [Face Detection](https://github.com/justadudewhohacks/face-api.js-models/tree/master/ssd_mobilenetv1)
 - [Mask Classifier](https://teachablemachine.withgoogle.com/models/wJeEWVm8t/)
 
+<!-- BLOG -->
 ## Blog 
 Checkout the blog where I write how I made this project 
 
