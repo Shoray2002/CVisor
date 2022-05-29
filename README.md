@@ -1,7 +1,3 @@
-# CVisor: Using Computer Vision to stop COVID-19
-
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -46,6 +42,8 @@ Establishments can use this app to feed in their live cctv data for realtime ana
 They even can upload recordings for analysis.
 The app has support for mask detection and even works for crowds.
 And since it runs on the browser its pretty fast too.
+
+### [Project Blog](https://dev.to/shoray2002/cvisor-using-computer-vision-to-stop-covid-19-10ka)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
