@@ -7,10 +7,10 @@ const canvas = document.querySelector("#canvas");
 let ctx = canvas.getContext("2d");
 const body = document.querySelector("body");
 const loader = document.querySelector(".load-wrapper");
-// face mask classifier model
-const model_URL = "https://teachablemachine.withgoogle.com/models/wJeEWVm8t/";
 let run_status = false;
 let mask_model;
+// face mask classifier model
+const model_URL = "https://teachablemachine.withgoogle.com/models/wJeEWVm8t/";
 
 // start analysis
 start.addEventListener("click", () => {
