@@ -1,114 +1,24 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta
+      name="description"
+      content="CVisor — browser-based face & mask detection. Runs fully offline as a PWA."
+    />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="res/css/global.css" />
-  <title>CVisor | Home</title>
-</head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CVisor" />
 
-<body class="preload">
-  <!-- navbar -->
-  <div class="outer-container">
-    <div class="top-bar">
-      <h3><span class="header-bold">CV</span>isor</h3>
-      <ul class="top-menu">
-        <li>&nbsp;</li>
-        <li class="header-bold"><a class="github" href="https://github.com/Shoray2002/CVisor" target="_blank">Github</a>
-        </li>
-      </ul>
-    </div>
-
-    <!-- banner -->
-    <div class="content-section-container text-centered bp-100 hero-section">
-      <img src="res/images/cctv.png" />
-      <div class="hero-text">
-        <h1>
-          Using <span class="header-bold">Computer Vision </span> to stop COVID-19
-        </h1>
-        <p>
-
-        </p>
-        <a class="btn btn-primary" href="/dashboard/">DashBoard</a>
-      </div>
-    </div>
-  </div>
-  <!-- features -->
-  <div class="bp-80"></div>
-  <div class="outer-container">
-    <div class="simple-flex">
-      <div class="content-section-container border-bottom benefits-container">
-        <h2 class="desktop-only bm-40">
-          Features of <span class="header-bold">CVisor</span>
-        </h2>
-      </div>
-      <div class="panels-img-container">
-        <h2 class="mobile-only bm-40">
-          <span class="header-bold">The benefits</span> of exercise
-        </h2>
-
-        <div class="panels">
-          <div class="panel panel-blue">
-            <h5 class="header-bold">Stream In Live Feeds</h5>
-            <p>
-              Stream in live CCTV or personal feeds for analysis by selecting different cameras.
-            </p>
-          </div>
-          <div class="panel panel-purple">
-            <h5 class="header-bold">Upload Recorded Videos</h5>
-            <p>
-              Upload recorded videos for analysis.
-            </p>
-          </div>
-          <div class="panel panel-purple">
-            <h5 class="header-bold">
-              Completely Client Side and Real Time
-            </h5>
-            <p>
-              Once the model has been downloaded, the application is completely client side and can be used even
-              offline in real time.
-            </p>
-          </div>
-
-          <div class="panel panel-blue">
-            <h5 class="header-bold">Modularity</h5>
-            <p>
-              The type of analysis can be changed on the fly.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="bp-80"></div>
-
-    <footer class="content-section-container text-centered">
-      <h3><span class="header-bold">CVisor</span> is a project by <a class="website" href="https://lordshoray.is-a.dev/"
-          target="_blank">Shoray
-          Singhal</a></h3>
-      <h5 class="rm-20 header-bold">Found a Bug? Report @</h5>
-      <h5 class="bm-15" style="color:#5c5fb8;">shoryasinghall@gmail.com</h5>
-    </footer>
-  </div>
-  <!-- loader -->
-  <div class="load-wrapper">
-    <span class="loader"><span class="loader-inner"></span></span>
-  </div>
-</body>
-<script>
-  // script for loader animation  
-  const body = document.querySelector("body");
-  const loader = document.querySelector(".load-wrapper");
-  const start = new Date().getTime();
-  // script for calculating time taken to load page
-  window.addEventListener("load", function () {
-    const end = new Date().getTime();
-    const time = end - start;
-    console.log(`Page took ${time} milliseconds to load.`);
-    body.classList.remove("preload");
-    loader.style.display = "none";
-  });
-</script>
-
+    <title>CVisor — Face & Mask Detection</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>

@@ -1,0 +1,7 @@
+node_modules
+dist
+dev-dist
+public/models
+public/*.png
+public/*.ico
+package-lock.json
