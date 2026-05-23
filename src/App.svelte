@@ -6,15 +6,17 @@
 
   const routes = {
     '/': Home,
-    '/video': wrap({ asyncComponent: () => import('./routes/Video.svelte') }),
-    '/stream': wrap({ asyncComponent: () => import('./routes/Stream.svelte') }),
+    '/live': wrap({ asyncComponent: () => import('./routes/Live.svelte') }),
+    '/review': wrap({ asyncComponent: () => import('./routes/Review.svelte') }),
+    '/roster': wrap({ asyncComponent: () => import('./routes/Roster.svelte') }),
     '*': NotFound,
   };
 
   const nav = [
     { path: '/', label: 'Home' },
-    { path: '/video', label: 'Video' },
-    { path: '/stream', label: 'Stream' },
+    { path: '/live', label: 'Live' },
+    { path: '/review', label: 'Review' },
+    { path: '/roster', label: 'Roster' },
   ];
 </script>
 
@@ -27,7 +29,7 @@
         >
           CV
         </span>
-        <span class="text-sm font-semibold tracking-tight text-white">CVisor</span>
+        <span class="text-sm font-semibold tracking-tight text-white">Watchroom</span>
       </a>
 
       <ul class="flex items-center gap-1 text-sm">

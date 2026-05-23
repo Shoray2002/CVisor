@@ -16,9 +16,8 @@
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.0",
     "@lucide/svelte": "^1.16.0",
-    "@tensorflow/tfjs": "^4.22.0",
     "@vladmandic/face-api": "^1.7.14",
-    "ml5": "^1.2.1",
+    "hls.js": "^1.6.16",
     "svelte-spa-router": "^4.0.1"
   },
   "devDependencies": {
@@ -29,7 +28,6 @@
     "eslint": "^9.17.0",
     "eslint-plugin-svelte": "^2.46.1",
     "globals": "^15.14.0",
-    "patch-package": "^8.0.0",
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.2",
     "svelte": "^5.16.0",

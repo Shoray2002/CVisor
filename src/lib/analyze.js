@@ -1,18 +1,33 @@
 import { getFaceapi } from './models.js';
+import {
+  detectFacesWithDescriptors,
+  matchEmbedding,
+  cropFaceToBlob,
+  euclideanDistance,
+} from './recognition.js';
+
+// ---------------------------------------------------------------------------
+// Tunables
+// ---------------------------------------------------------------------------
 
 const MIN_CONFIDENCE = 0.3;
-const ACCENT_COLOR = '#818cf8';
-const MASKED_COLOR = '#34d399';
-const UNMASKED_COLOR = '#fb7185';
 
-// Temporal smoothing — each tracked face keeps the last N raw classifications;
-// the displayed label is the majority across that window. This kills the
-// frame-to-frame flicker without delaying the box itself.
-const WINDOW = 10;
-// Matching threshold between consecutive frames' bounding boxes.
-const MIN_IOU = 0.3;
-// How many frames a track can be missing before we drop it.
-const TRACK_TTL_FRAMES = 15;
+const ACCENT_COLOR = '#818cf8';
+const KNOWN_COLOR = '#34d399';
+const UNKNOWN_COLOR = '#fb7185';
+const LOITER_COLOR = '#fbbf24';
+
+const WINDOW = 10; // frames in the rolling identity vote
+const MIN_IOU = 0.25; // primary track match between consecutive frames
+const EMBED_TRACK_THRESHOLD = 0.55; // fallback descriptor-similarity match
+const TRACK_TTL_FRAMES = 60; // a track survives this many frames unseen
+const EMBED_BUFFER = 5; // descriptors averaged per track
+
+const UNKNOWN_ID = '__unknown__';
+
+// ---------------------------------------------------------------------------
+// Geometry / stats helpers
+// ---------------------------------------------------------------------------
 
 function iou(a, b) {
   const ix1 = Math.max(a.x, b.x);
@@ -30,7 +45,7 @@ function iou(a, b) {
 function majority(history) {
   const counts = new Map();
   for (const l of history) {
-    if (!l) continue;
+    if (l === null || l === undefined) continue;
     counts.set(l, (counts.get(l) ?? 0) + 1);
   }
   let best = null;
@@ -44,50 +59,105 @@ function majority(history) {
   return best;
 }
 
+function meanEmbedding(buffer) {
+  if (!buffer.length) return null;
+  const dim = buffer[0].length;
+  const out = new Float32Array(dim);
+  for (const emb of buffer) {
+    for (let i = 0; i < dim; i++) out[i] += emb[i];
+  }
+  for (let i = 0; i < dim; i++) out[i] /= buffer.length;
+  return out;
+}
+
+function formatDwell(ms) {
+  const s = Math.floor(ms / 1000);
+  const m = Math.floor(s / 60);
+  return `${m}:${String(s % 60).padStart(2, '0')}`;
+}
+
+// ---------------------------------------------------------------------------
+// Tracker
+// ---------------------------------------------------------------------------
+
 function createTracker() {
-  const tracks = new Map(); // id -> { box, history, lastSeen }
+  const tracks = new Map();
   let nextId = 1;
 
-  return {
-    /**
-     * Match the current frame's detections to existing tracks by IoU.
-     * Returns an array of track refs aligned with the input boxes.
-     */
-    assign(boxes, frame) {
-      const assigned = new Set();
-      const result = new Array(boxes.length);
+  function pushEmbedding(track, descriptor) {
+    track.embeddings.push(descriptor);
+    if (track.embeddings.length > EMBED_BUFFER) track.embeddings.shift();
+    track.meanEmbedding = meanEmbedding(track.embeddings);
+  }
 
-      for (let i = 0; i < boxes.length; i++) {
+  return {
+    assign(detections, frame, nowMs) {
+      const assigned = new Set();
+      const out = new Array(detections.length);
+
+      for (let i = 0; i < detections.length; i++) {
+        const { box, descriptor } = detections[i];
         let bestId = null;
-        let bestScore = MIN_IOU;
+
+        // 1) IoU match — fast, works for slow motion.
+        let bestIou = MIN_IOU;
         for (const [id, track] of tracks) {
           if (assigned.has(id)) continue;
-          const score = iou(boxes[i], track.box);
-          if (score > bestScore) {
-            bestScore = score;
+          const score = iou(box, track.box);
+          if (score > bestIou) {
+            bestIou = score;
             bestId = id;
           }
         }
+
+        // 2) Descriptor-similarity fallback — handles fast head motion or
+        //    brief disappearance where IoU breaks.
+        if (bestId === null && descriptor) {
+          let bestDist = EMBED_TRACK_THRESHOLD;
+          for (const [id, track] of tracks) {
+            if (assigned.has(id) || !track.meanEmbedding) continue;
+            const d = euclideanDistance(descriptor, track.meanEmbedding);
+            if (d < bestDist) {
+              bestDist = d;
+              bestId = id;
+            }
+          }
+        }
+
+        // 3) Fresh track.
         if (bestId === null) {
           bestId = nextId++;
-          tracks.set(bestId, { box: boxes[i], history: [], lastSeen: frame });
+          tracks.set(bestId, {
+            id: bestId,
+            box,
+            history: [],
+            embeddings: [],
+            meanEmbedding: null,
+            firstSeenMs: nowMs,
+            lastSeen: frame,
+            dwellMs: 0,
+            loiterFlagged: false,
+            strangerAnnounced: false,
+          });
         }
+
         const track = tracks.get(bestId);
-        track.box = boxes[i];
+        track.box = box;
         track.lastSeen = frame;
+        track.dwellMs = nowMs - track.firstSeenMs;
+        if (descriptor) pushEmbedding(track, descriptor);
         assigned.add(bestId);
-        result[i] = track;
+        out[i] = track;
       }
 
-      // GC stale tracks
       for (const [id, track] of tracks) {
         if (frame - track.lastSeen > TRACK_TTL_FRAMES) tracks.delete(id);
       }
 
-      return result;
+      return out;
     },
-    recordLabel(track, label) {
-      track.history.push(label ?? null);
+    recordMatch(track, identityId) {
+      track.history.push(identityId);
       if (track.history.length > WINDOW) track.history.shift();
     },
     smoothed(track) {
@@ -96,72 +166,85 @@ function createTracker() {
   };
 }
 
-function classifyFace(maskBundle, faceCanvas) {
-  const { tf, model, labels, height, width } = maskBundle;
-  const probs = tf.tidy(() => {
-    const img = tf.browser
-      .fromPixels(faceCanvas)
-      .resizeBilinear([height, width])
-      .toFloat()
-      .div(127.5)
-      .sub(1)
-      .expandDims(0);
-    return Array.from(model.predict(img).dataSync());
-  });
-  let bestIdx = 0;
-  let bestScore = -Infinity;
-  for (let i = 0; i < probs.length; i++) {
-    if (probs[i] > bestScore) {
-      bestScore = probs[i];
-      bestIdx = i;
-    }
-  }
-  return labels[bestIdx] ?? null;
-}
+// ---------------------------------------------------------------------------
+// Canvas drawing — operates entirely in canvas-buffer pixels.
+// ---------------------------------------------------------------------------
 
-function drawBox(ctx, box, color, label) {
+function drawBoxScaled(ctx, box, sx, sy, color, label) {
+  const x = box.x * sx;
+  const y = box.y * sy;
+  const w = box.width * sx;
+  const h = box.height * sy;
+  const lineWidth = Math.max(2, 3 * Math.min(sx, sy));
+
+  ctx.lineWidth = lineWidth;
   ctx.strokeStyle = color;
-  ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.rect(box.x, box.y, box.width, box.height);
+  ctx.rect(x, y, w, h);
   ctx.stroke();
 
   if (label) {
-    const pad = 6;
-    ctx.font = "600 13px 'Inter Variable', system-ui, sans-serif";
+    const pad = 6 * Math.min(sx, sy);
+    const fontPx = Math.max(11, 13 * Math.min(sx, sy));
+    ctx.font = `600 ${fontPx}px 'Inter Variable', system-ui, sans-serif`;
     const metrics = ctx.measureText(label);
     const labelW = metrics.width + pad * 2;
-    const labelH = 20;
-    const labelY = Math.max(0, box.y - labelH);
+    const labelH = fontPx + pad;
+    const labelY = Math.max(0, y - labelH);
     ctx.fillStyle = color;
-    ctx.fillRect(box.x, labelY, labelW, labelH);
+    ctx.fillRect(x, labelY, labelW, labelH);
     ctx.fillStyle = '#0b1226';
     ctx.textBaseline = 'middle';
-    ctx.fillText(label, box.x + pad, labelY + labelH / 2);
+    ctx.fillText(label, x + pad, labelY + labelH / 2);
   }
 }
 
-function colorForLabel(label) {
-  if (label === 'With_Mask') return { color: MASKED_COLOR, text: 'Mask' };
-  if (label === 'Without_Mask') return { color: UNMASKED_COLOR, text: 'No mask' };
-  return { color: ACCENT_COLOR, text: '' };
+function colorForTrack(track, smoothed, rosterById, isLoiter) {
+  if (isLoiter) {
+    const knownName =
+      smoothed && smoothed !== UNKNOWN_ID ? rosterById.get(smoothed)?.name : null;
+    return {
+      color: LOITER_COLOR,
+      label: `${knownName ?? 'Loitering'} · ${formatDwell(track.dwellMs)}`,
+    };
+  }
+  if (smoothed && smoothed !== UNKNOWN_ID) {
+    const entry = rosterById.get(smoothed);
+    return { color: KNOWN_COLOR, label: entry?.name ?? 'Known' };
+  }
+  if (smoothed === UNKNOWN_ID) {
+    return { color: UNKNOWN_COLOR, label: `Unknown #${track.id}` };
+  }
+  return { color: ACCENT_COLOR, label: '' };
 }
 
-/**
- * Per-frame detection + mask-classification loop with temporal smoothing.
- *
- * Each detected face is matched to a track (by IoU with the previous frame's
- * boxes). The track holds the last WINDOW raw classifications, and the
- * displayed label is the majority vote across that window. The box is drawn
- * immediately on detection in the *smoothed* color so the overlay stays
- * stable even when individual frame predictions wobble.
- */
-export function startAnalyze({ video, canvas, maskModel, onStats, onReady }) {
+// ---------------------------------------------------------------------------
+// Main loop
+// ---------------------------------------------------------------------------
+
+export function startAnalyze({
+  video,
+  canvas,
+  getRoster = () => [],
+  getLoiterThresholdMs = () => 60_000,
+  onStats,
+  onEvent,
+  onError,
+}) {
   const ctx = canvas.getContext('2d');
-  const state = { running: true, ready: false };
+  const state = { running: true };
   const tracker = createTracker();
   let faceapi;
   let frameId = 0;
+  let errorReported = false;
+
+  function emitEvent(track, payload, sourceBox) {
+    if (!onEvent) return;
+    // Crop is taken from the *video* in its native coordinate space.
+    cropFaceToBlob(video, sourceBox).then((thumbnail) => {
+      onEvent({ ...payload, trackId: track.id, thumbnail });
+    });
+  }
 
   const tick = async () => {
     if (!state.running) return;
@@ -170,65 +253,101 @@ export function startAnalyze({ video, canvas, maskModel, onStats, onReady }) {
       if (state.running) requestAnimationFrame(tick);
       return;
     }
-
-    if (!state.ready) {
-      state.ready = true;
-      onReady?.();
+    if (!canvas.width || !canvas.height) {
+      // Canvas hasn't been sized yet — try again next frame.
+      if (state.running) requestAnimationFrame(tick);
+      return;
     }
 
     const myFrame = ++frameId;
-    const dims = faceapi.matchDimensions(canvas, video, true);
-    const options = new faceapi.SsdMobilenetv1Options({ minConfidence: MIN_CONFIDENCE });
-    const detections = await faceapi.detectAllFaces(video, options);
+    const nowMs = performance.now();
+
+    let results;
+    try {
+      results = await detectFacesWithDescriptors(faceapi, video, MIN_CONFIDENCE);
+    } catch (err) {
+      if (!errorReported) {
+        errorReported = true;
+        const msg = /tainted|cross-origin|SecurityError/i.test(err?.message ?? String(err))
+          ? 'This stream blocks on-device analysis (CORS). Try a different feed.'
+          : `Detection failed: ${err?.message ?? err}`;
+        console.error('[analyze]', err);
+        onError?.(msg);
+      }
+      if (state.running) requestAnimationFrame(tick);
+      return;
+    }
     if (!state.running || myFrame !== frameId) return;
 
-    const resized = faceapi.resizeResults(detections, dims);
-    const boxes = resized.map((d) => d.box);
-    const trackRefs = tracker.assign(boxes, myFrame);
+    // Detection coordinates come back in the video's native coordinate
+    // system. Compute the scale to map them into the canvas's buffer.
+    const sx = canvas.width / video.videoWidth;
+    const sy = canvas.height / video.videoHeight;
 
-    // Paint each box with the *smoothed* label/color from its track's history.
-    // For brand new tracks (no history yet) this falls back to the accent color.
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let masked = 0;
-    boxes.forEach((box, i) => {
-      const smoothed = tracker.smoothed(trackRefs[i]);
-      const { color, text } = colorForLabel(smoothed);
-      drawBox(ctx, box, color, text);
-      if (smoothed === 'With_Mask') masked += 1;
+    const detections = results.map((r) => ({
+      box: r.detection.box,
+      descriptor: r.descriptor,
+    }));
+    const trackRefs = tracker.assign(detections, myFrame, nowMs);
+
+    const roster = getRoster();
+    const rosterById = new Map(roster.map((r) => [r.id, r]));
+
+    // Roster match each face, push into the track's identity history.
+    results.forEach((r, i) => {
+      const match = matchEmbedding(r.descriptor, roster);
+      tracker.recordMatch(trackRefs[i], match ? match.id : UNKNOWN_ID);
     });
-    onStats?.({ faces: boxes.length, masked });
 
-    // Run the raw per-frame classification and feed each result into its
-    // track's history. The result of this is what stabilises future frames.
-    if (maskModel && resized.length > 0) {
-      try {
-        const faces = await faceapi.extractFaces(video, detections);
-        if (!state.running || myFrame !== frameId) return;
+    // Paint.
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let known = 0;
+    let unknown = 0;
+    let loitering = 0;
+    const loiterMs = getLoiterThresholdMs();
 
-        faces.forEach((face, i) => {
-          let raw = null;
-          try {
-            raw = classifyFace(maskModel, face);
-          } catch {
-            raw = null;
-          }
-          tracker.recordLabel(trackRefs[i], raw);
-        });
+    for (let i = 0; i < detections.length; i++) {
+      const track = trackRefs[i];
+      const smoothed = tracker.smoothed(track);
+      const isLoiter = track.dwellMs >= loiterMs;
+      const { color, label } = colorForTrack(track, smoothed, rosterById, isLoiter);
+      drawBoxScaled(ctx, detections[i].box, sx, sy, color, label);
+      if (isLoiter) loitering++;
+      else if (smoothed === UNKNOWN_ID) unknown++;
+      else if (smoothed && smoothed !== UNKNOWN_ID) known++;
+    }
+    onStats?.({ faces: detections.length, known, unknown, loitering });
 
-        // Re-paint with the freshly-updated smoothed labels (only if this
-        // is still the latest frame).
-        if (!state.running || myFrame !== frameId) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        let m = 0;
-        boxes.forEach((box, i) => {
-          const smoothed = tracker.smoothed(trackRefs[i]);
-          const { color, text } = colorForLabel(smoothed);
-          drawBox(ctx, box, color, text);
-          if (smoothed === 'With_Mask') m += 1;
-        });
-        onStats?.({ faces: boxes.length, masked: m });
-      } catch {
-        /* swallow; next frame retries */
+    // Fire events for newly-confirmed strangers and freshly-loitering tracks.
+    for (let i = 0; i < trackRefs.length; i++) {
+      const track = trackRefs[i];
+      const smoothed = tracker.smoothed(track);
+
+      if (
+        !track.strangerAnnounced &&
+        smoothed === UNKNOWN_ID &&
+        track.history.length >= Math.min(WINDOW, 5)
+      ) {
+        track.strangerAnnounced = true;
+        emitEvent(
+          track,
+          { kind: 'stranger_arrived', identityId: null, name: null },
+          detections[i].box,
+        );
+      }
+
+      if (!track.loiterFlagged && track.dwellMs >= loiterMs) {
+        track.loiterFlagged = true;
+        const name = smoothed && smoothed !== UNKNOWN_ID ? rosterById.get(smoothed)?.name : null;
+        emitEvent(
+          track,
+          {
+            kind: 'loiter',
+            identityId: smoothed && smoothed !== UNKNOWN_ID ? smoothed : null,
+            name: name ?? null,
+          },
+          detections[i].box,
+        );
       }
     }
 

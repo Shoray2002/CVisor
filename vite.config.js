@@ -13,9 +13,10 @@ export default defineConfig({
       injectRegister: 'auto',
       includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon-180x180.png'],
       manifest: {
-        name: 'CVisor',
-        short_name: 'CVisor',
-        description: 'Browser-based face & mask detection. Runs fully offline after first load.',
+        name: 'Watchroom',
+        short_name: 'Watchroom',
+        description:
+          'On-device CCTV monitor — face watchlist & loitering alerts. Runs offline after first load.',
         theme_color: '#0f172a',
         background_color: '#020617',
         display: 'standalone',
@@ -42,7 +43,7 @@ export default defineConfig({
             urlPattern: ({ url }) => url.pathname.startsWith('/models/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'cvisor-models',
+              cacheName: 'watchroom-models',
               expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 },
               cacheableResponse: { statuses: [0, 200] },
             },

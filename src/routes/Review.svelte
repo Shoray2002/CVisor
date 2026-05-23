@@ -4,8 +4,9 @@
   import Loader from '$lib/components/Loader.svelte';
   import DetectionCanvas from '$lib/components/DetectionCanvas.svelte';
   import StatusBadge from '$lib/components/StatusBadge.svelte';
-  import { loadModels } from '$lib/models.js';
+  import { loadAllModels } from '$lib/models.js';
   import { startAnalyze } from '$lib/analyze.js';
+  import { listRoster, appendEvent } from '$lib/storage.js';
   import Upload from '@lucide/svelte/icons/upload';
   import Play from '@lucide/svelte/icons/play';
   import Square from '@lucide/svelte/icons/square';
@@ -13,12 +14,14 @@
   let videoEl = $state();
   let canvasEl = $state();
   let fileName = $state('');
-  let stats = $state({ faces: 0, masked: 0 });
+  let loiterSeconds = $state(30);
+  let stats = $state({ faces: 0, known: 0, unknown: 0, loitering: 0 });
   let running = $state(false);
   let loading = $state(false);
   let error = $state('');
 
   let session = null;
+  let roster = [];
 
   async function handleFile(e) {
     const file = e.target.files?.[0];
@@ -26,9 +29,8 @@
     fileName = file.name;
     error = '';
     stopSession();
-
     videoEl.src = URL.createObjectURL(file);
-    videoEl.playbackRate = 0.5;
+    videoEl.playbackRate = 0.75;
     videoEl.controls = true;
     await videoEl.play().catch(() => {});
   }
@@ -41,15 +43,20 @@
     error = '';
     loading = true;
     try {
-      const { mask } = await loadModels();
+      await loadAllModels();
+      roster = await listRoster();
       loading = false;
       running = true;
       videoEl.play().catch(() => {});
       session = startAnalyze({
         video: videoEl,
         canvas: canvasEl,
-        maskModel: mask,
+        getRoster: () => roster,
+        getLoiterThresholdMs: () => loiterSeconds * 1000,
         onStats: (s) => (stats = s),
+        onEvent: async (evt) => {
+          await appendEvent(evt);
+        },
       });
     } catch (err) {
       loading = false;
@@ -61,7 +68,7 @@
     session?.stop();
     session = null;
     running = false;
-    stats = { faces: 0, masked: 0 };
+    stats = { faces: 0, known: 0, unknown: 0, loitering: 0 };
   }
 
   onDestroy(stopSession);
@@ -71,9 +78,9 @@
 
 <section class="flex flex-col gap-10">
   <header class="flex flex-col gap-2">
-    <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">Video</h1>
+    <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">Review</h1>
     <p class="max-w-xl text-sm text-slate-400">
-      Upload a recording. Face boxes appear over the playback and re-color when a mask is detected.
+      Run the same watchlist + dwell pipeline over an uploaded recording.
     </p>
   </header>
 
@@ -93,6 +100,19 @@
         <span class="truncate text-xs text-slate-500">{fileName}</span>
       {/if}
 
+      <label class="flex items-center gap-2 text-xs text-slate-400">
+        Dwell
+        <input
+          type="number"
+          min="3"
+          max="600"
+          step="1"
+          bind:value={loiterSeconds}
+          class="h-8 w-16 rounded-md border border-white/10 bg-white/[0.04] px-2 text-sm text-white focus:border-indigo-400/40 focus:outline-none focus:ring-2 focus:ring-indigo-400/30"
+        />
+        <span class="text-slate-500">sec</span>
+      </label>
+
       <div class="ml-auto">
         {#if !running}
           <Button onclick={start} disabled={loading} size="sm">
@@ -109,7 +129,13 @@
     </div>
 
     <div class="mx-auto w-full max-w-2xl">
-      <StatusBadge {running} faces={stats.faces} masked={stats.masked} />
+      <StatusBadge
+        {running}
+        faces={stats.faces}
+        known={stats.known}
+        unknown={stats.unknown}
+        loitering={stats.loitering}
+      />
       {#if error}
         <p class="mt-3 text-sm text-rose-300">{error}</p>
       {/if}
