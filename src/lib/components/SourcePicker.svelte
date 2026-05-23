@@ -56,7 +56,6 @@
       <Button size="sm" variant="secondary" onclick={() => onConnectHls?.(hlsUrl)}>Connect</Button>
     </div>
     <div class="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-      <span>HLS (<code>.m3u8</code>) with CORS enabled.</span>
       <button
         type="button"
         class="rounded-md border border-white/10 px-2 py-0.5 text-slate-300 transition-colors hover:bg-white/5"
@@ -68,9 +67,5 @@
         Try sample
       </button>
     </div>
-    <p class="text-[11px] leading-relaxed text-slate-600">
-      Note: streams without CORS headers will block on-device analysis. NVR streams typically
-      require enabling CORS in the camera/NVR web UI.
-    </p>
   {/if}
 </div>

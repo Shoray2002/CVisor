@@ -1,140 +1,137 @@
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://cvisor.netlify.app/">
-    <h1>CVisor</h1>
-  </a>
-</div>
+# Watchroom
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#demo">Demo</a></li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#model">Model</a></li>
-    <li><a href="#blog">Blog</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
+On-device CCTV monitor. Detects faces in a video feed, recognizes enrolled
+identities, and flags strangers and loitering — all in the browser, with no
+data leaving the device. Installable as a PWA, works offline after first load.
 
-<!-- ABOUT THE PROJECT -->
+## How to use
 
-## About The Project
+The whole flow is two steps: build a watchlist, then point it at a feed.
 
-CVisor is a crossplatform webapp where people can analyse various video media for compliance with COVID-19 norms. With COVID cases on the rise once again this app can really come in handy.
-Establishments can use this app to feed in their live cctv data for realtime analysis and keep covid in check.
-They even can upload recordings for analysis.
-The app has support for mask detection and even works for crowds.
-And since it runs on the browser its pretty fast too.
+### 1. Enroll the faces you want recognized
 
-### [Project Blog](https://dev.to/shoray2002/cvisor-using-computer-vision-to-stop-covid-19-10ka)
+Open `/#/roster`.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+- Click **Upload photo** and pick any image containing the faces you want on
+  the watchlist. Group photos work — every face the model detects shows up
+  as a row.
+- Type a name for each face. Leave a row blank (or hit the **×**) to skip it.
+- **Save all** writes the named entries to the browser's IndexedDB.
+  Embeddings are 128-d floats — they live on this device only.
 
-### Built With
+Tips for accuracy: pick photos with clearly-lit, mostly-frontal faces; one
+person per row means one embedding per roster entry. You can enroll the same
+person from multiple photos to capture different angles — Live's matcher
+picks the best of all enrolled entries.
 
-- Vanilla HTML+CSS+JS
-- [Bootstrap](https://getbootstrap.com/)
-- [Tensorflow.js](https://www.tensorflow.org/js)
-- [Teachable Machine](https://teachablemachine.withgoogle.com/)
-- [ML5.js](https://ml5js.org/)
-- [Face-api.js](https://justadudewhohacks.github.io/face-api.js/docs/index.html)
-- [Git/GitHub](https://github.com/)
-- [Netlify](https://www.netlify.com/)
+### 2. Watch a feed
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+Open `/#/live`.
 
-<!-- GETTING STARTED -->
+Pick a source:
 
-## Getting Started
+- **Webcam** — pick the camera from the dropdown. The list populates after
+  you grant camera permission.
+- **Remote feed** — paste an HLS (`.m3u8`) URL and **Connect**. The stream
+  has to serve CORS headers; if it doesn't, the box overlay won't draw and
+  you'll see a CORS message. There's a **Try sample** button that fills in
+  a known-working test stream.
 
-Below are the instructions on setting up this project locally.
-To get a local copy up and running follow these simple example steps.
+Set the **Dwell threshold** (seconds). When a face stays in frame past this,
+the box turns amber and a `Loitering` event is logged.
 
-### Prerequisites
+Hit **Start**. Models load on the first run and stay cached. Each detected
+face gets a box:
 
-- [Live Server](https://www.youtube.com/watch?v=_wue59ldqMg)
+| Color  | Meaning                                                |
+| ------ | ------------------------------------------------------ |
+| Indigo | New track — still aggregating frames before committing |
+| Green  | Roster match (label = the name you entered)            |
+| Rose   | Stranger — no roster match across the smoothing window |
+| Amber  | Loitering — dwell time exceeded the threshold          |
 
-### Installation
+The right-hand **Event log** records `Unknown face` (first time a stranger
+is confirmed for a track) and `Loitering` events with a face thumbnail and
+a relative timestamp. Events persist across reloads. **Clear** wipes them.
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/Shoray2002/CVisor.git
-   ```
-2. Start the Live Server
+### 3. (Optional) Review a recording
 
-The Project is now running locally
+`/#/review` runs the same pipeline against an uploaded video file. Useful
+for after-the-fact CCTV review against your existing roster.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+### Install as a PWA
 
-<!-- DEMO -->
+The browser will offer an install prompt once it sees the manifest. Once
+installed, Watchroom launches in its own window, works offline (models are
+service-worker cached after the first load), and survives reloads with the
+roster + event log intact.
 
-## Demo
+## Stack
 
-Checkout this project demo [here](https://youtu.be/KA11Fvv025c)
+- Svelte 5 + Vite 6 + Tailwind v4
+- `@vladmandic/face-api` (detection + landmarks + 128-d embeddings)
+- `hls.js` for remote HLS feeds (Safari uses native HLS)
+- `vite-plugin-pwa` (Workbox) — manifest + service worker, models precached
+- IndexedDB for the roster + event log
 
-<!-- USAGE EXAMPLES -->
+## Run it
 
-## Usage
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # → dist/
+npm run preview  # serve the production build
+```
 
-Examples
+Lint + format: `npm run lint`, `npm run format`.
 
-![ujh5hoov9l8l3svpirgb](https://user-images.githubusercontent.com/76423272/170884713-2b285002-2e25-4446-90c9-6b68427ce5ed.gif)
-![second](https://user-images.githubusercontent.com/76423272/170884866-19c23aa6-d382-4ef3-9146-d78f4dc75e12.gif)
-![Screencast from 29-05-22 11_34_12 PM IST (1)](https://user-images.githubusercontent.com/76423272/170885153-85534867-d239-4c3f-bba9-9cc70e3023f8.gif)
+## Routes
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+| Path      | Purpose                                                           |
+| --------- | ----------------------------------------------------------------- |
+| `/`       | Landing                                                           |
+| `/live`   | Live feed: webcam or remote HLS, with watchlist + dwell overlays  |
+| `/review` | Same pipeline against an uploaded recording                       |
+| `/roster` | Upload a photo — every detected face becomes a named roster entry |
 
-<!-- MODEL -->
+Routing is hash-based (`/#/live`, `/#/roster`, …) so no server-side rewrites
+are needed when deploying.
 
-## Model
+## Where things live
 
-Models I used
+```
+src/
+├─ main.js                 entry, mounts <App/>
+├─ app.css                 Tailwind import + design tokens
+├─ App.svelte              router shell + nav
+├─ lib/
+│  ├─ models.js            face / landmark / recognition net loaders
+│  ├─ recognition.js       face-api detection helpers + embedding match
+│  ├─ analyze.js           per-frame loop: tracker, dwell, overlay paint
+│  ├─ sources.js           webcam / HLS source factories
+│  ├─ storage.js           IndexedDB for roster + events
+│  ├─ utils.js             cn() helper (clsx + tailwind-merge)
+│  └─ components/          DetectionCanvas, EventLog, Loader, SourcePicker,
+│                          StatusBadge, ui/{Button,Select}
+└─ routes/
+   ├─ Home.svelte
+   ├─ Live.svelte
+   ├─ Review.svelte
+   ├─ Roster.svelte
+   └─ NotFound.svelte
+```
 
-- [Face Detection](https://github.com/justadudewhohacks/face-api.js-models/tree/master/ssd_mobilenetv1)
-- [Mask Classifier](https://teachablemachine.withgoogle.com/models/wJeEWVm8t/)
+Models live in `public/models/{face,landmark,recognition}/` and are
+runtime-cached by the service worker on first load.
 
-<!-- BLOG -->
+## Remote feeds
 
-## Blog
-
-Checkout the blog where I write how I made this project
-
-[CVisor](https://dev.to/shoray2002/cvisor-using-computer-vision-to-stop-covid-19-10ka)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-<!-- LICENSE -->
+HLS only (`.m3u8`). The stream must serve CORS headers — without them the
+browser blocks pixel reads off the video and analysis can't run. Most NVRs
+expose a CORS toggle in their web UI. Native RTSP is intentionally
+unsupported; piping through a server proxy would defeat the on-device
+guarantee.
 
 ## License
 
-Distributed under the MIT License. See [`LICENSE.txt`](/LICENSE.txt) for more information.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-<!-- CONTACT -->
-
-## Contact
-
-Shoray - [@ShoraySinghal](https://twitter.com/ShoraySinghal) - shoryasinghall@gmail.com
-
-Deployment Link: [CVisor](https://cvisor.netlify.app/)
-
-Personal Website: [LordShorya](lordshoray.is-a.dev)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+MIT — see `LICENSE.txt`.

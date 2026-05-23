@@ -39,7 +39,25 @@
         class="text-slate-500 transition-transform group-hover:translate-x-0.5 group-hover:text-white"
       />
     </a>
-
+    <a
+      use:link
+      href="/review"
+      class="group glass flex items-center justify-between rounded-2xl p-6 transition-colors hover:bg-white/[0.08]"
+    >
+      <div class="flex items-center gap-4">
+        <span class="grid size-11 place-items-center rounded-xl bg-indigo-500/15 text-indigo-300">
+          <Radio size={20} />
+        </span>
+        <span class="flex flex-col">
+          <span class="font-medium text-white">Review video</span>
+          <span class="text-sm text-slate-400">Review a video file</span>
+        </span>
+      </div>
+      <ArrowRight
+        size={18}
+        class="text-slate-500 transition-transform group-hover:translate-x-0.5 group-hover:text-white"
+      />
+    </a>
     <a
       use:link
       href="/roster"

@@ -1,17 +1,16 @@
 {
-  "name": "cvisor",
+  "name": "watchroom",
   "private": true,
   "version": "2.0.0",
   "type": "module",
-  "description": "Browser-based face & mask detection PWA",
+  "description": "On-device CCTV monitor — face watchlist + loitering alerts. Runs offline as a PWA.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "generate-pwa-assets": "pwa-assets-generator"
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.0",
@@ -23,7 +22,6 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tailwindcss/vite": "^4.0.0",
-    "@vite-pwa/assets-generator": "^0.2.6",
     "clsx": "^2.1.1",
     "eslint": "^9.17.0",
     "eslint-plugin-svelte": "^2.46.1",
@@ -34,7 +32,6 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^4.0.0",
     "vite": "^6.0.6",
-    "vite-plugin-pwa": "^0.21.1",
-    "workbox-window": "^7.3.0"
+    "vite-plugin-pwa": "^0.21.1"
   }
 }

@@ -1,7 +1,8 @@
 import { getFaceapi } from './models.js';
 import {
   detectFacesWithDescriptors,
-  matchEmbedding,
+  matchEmbeddingCandidates,
+  RECOGNITION_THRESHOLD,
   cropFaceToBlob,
   euclideanDistance,
 } from './recognition.js';
@@ -17,11 +18,16 @@ const KNOWN_COLOR = '#34d399';
 const UNKNOWN_COLOR = '#fb7185';
 const LOITER_COLOR = '#fbbf24';
 
-const WINDOW = 10; // frames in the rolling identity vote
+const WINDOW = 10; // frames in the rolling identity buffer
 const MIN_IOU = 0.25; // primary track match between consecutive frames
 const EMBED_TRACK_THRESHOLD = 0.55; // fallback descriptor-similarity match
 const TRACK_TTL_FRAMES = 60; // a track survives this many frames unseen
 const EMBED_BUFFER = 5; // descriptors averaged per track
+
+// To commit a roster identity we need this many frames in the window to
+// have matched that identity at least once. Prevents a single noisy frame
+// from snapping the label to the wrong person.
+const MIN_KNOWN_VOTES = 2;
 
 const UNKNOWN_ID = '__unknown__';
 
@@ -42,21 +48,34 @@ function iou(a, b) {
   return inter / union;
 }
 
-function majority(history) {
-  const counts = new Map();
-  for (const l of history) {
-    if (l === null || l === undefined) continue;
-    counts.set(l, (counts.get(l) ?? 0) + 1);
-  }
-  let best = null;
-  let bestCount = 0;
-  for (const [k, v] of counts) {
-    if (v > bestCount) {
-      best = k;
-      bestCount = v;
+/**
+ * Pick a roster identity from a window of per-frame candidate lists.
+ * For each roster id seen at least MIN_KNOWN_VOTES times in the window,
+ * record its best (smallest) distance. The identity with the strongest
+ * best-match wins. Returns null when the window has no qualifying matches.
+ */
+function aggregateIdentity(matchHistory) {
+  const stats = new Map(); // rosterId -> { minDist, count }
+  for (const candidates of matchHistory) {
+    for (const c of candidates) {
+      const cur = stats.get(c.id);
+      if (!cur) {
+        stats.set(c.id, { minDist: c.distance, count: 1 });
+      } else {
+        if (c.distance < cur.minDist) cur.minDist = c.distance;
+        cur.count += 1;
+      }
     }
   }
-  return best;
+  let bestId = null;
+  let bestMin = Infinity;
+  for (const [id, s] of stats) {
+    if (s.count >= MIN_KNOWN_VOTES && s.minDist < bestMin) {
+      bestMin = s.minDist;
+      bestId = id;
+    }
+  }
+  return bestId;
 }
 
 function meanEmbedding(buffer) {
@@ -130,7 +149,7 @@ function createTracker() {
           tracks.set(bestId, {
             id: bestId,
             box,
-            history: [],
+            matchHistory: [], // array of arrays of {id, distance}
             embeddings: [],
             meanEmbedding: null,
             firstSeenMs: nowMs,
@@ -156,12 +175,22 @@ function createTracker() {
 
       return out;
     },
-    recordMatch(track, identityId) {
-      track.history.push(identityId);
-      if (track.history.length > WINDOW) track.history.shift();
+    recordMatches(track, candidates) {
+      track.matchHistory.push(candidates);
+      if (track.matchHistory.length > WINDOW) track.matchHistory.shift();
     },
+    /**
+     * Smoothed identity for the track. Returns:
+     *  - a roster id if any candidate cleared MIN_KNOWN_VOTES in the window
+     *  - UNKNOWN_ID once the window is full with no qualifying matches
+     *  - null while the window is still filling and no identity is committed
+     *    yet (rendered as the accent color)
+     */
     smoothed(track) {
-      return majority(track.history);
+      if (track.matchHistory.length === 0) return null;
+      const known = aggregateIdentity(track.matchHistory);
+      if (known !== null) return known;
+      return track.matchHistory.length >= WINDOW ? UNKNOWN_ID : null;
     },
   };
 }
@@ -201,8 +230,7 @@ function drawBoxScaled(ctx, box, sx, sy, color, label) {
 
 function colorForTrack(track, smoothed, rosterById, isLoiter) {
   if (isLoiter) {
-    const knownName =
-      smoothed && smoothed !== UNKNOWN_ID ? rosterById.get(smoothed)?.name : null;
+    const knownName = smoothed && smoothed !== UNKNOWN_ID ? rosterById.get(smoothed)?.name : null;
     return {
       color: LOITER_COLOR,
       label: `${knownName ?? 'Loitering'} · ${formatDwell(track.dwellMs)}`,
@@ -293,10 +321,12 @@ export function startAnalyze({
     const roster = getRoster();
     const rosterById = new Map(roster.map((r) => [r.id, r]));
 
-    // Roster match each face, push into the track's identity history.
+    // Roster match each face. We push *all* candidates under threshold into
+    // the track's identity history, not just the per-frame best — see
+    // aggregateIdentity for why.
     results.forEach((r, i) => {
-      const match = matchEmbedding(r.descriptor, roster);
-      tracker.recordMatch(trackRefs[i], match ? match.id : UNKNOWN_ID);
+      const candidates = matchEmbeddingCandidates(r.descriptor, roster, RECOGNITION_THRESHOLD);
+      tracker.recordMatches(trackRefs[i], candidates);
     });
 
     // Paint.
@@ -323,11 +353,11 @@ export function startAnalyze({
       const track = trackRefs[i];
       const smoothed = tracker.smoothed(track);
 
-      if (
-        !track.strangerAnnounced &&
-        smoothed === UNKNOWN_ID &&
-        track.history.length >= Math.min(WINDOW, 5)
-      ) {
+      // smoothed() only returns UNKNOWN_ID once matchHistory is full and no
+      // roster identity got enough votes — i.e. the track has been observed
+      // for a full window with no qualifying match. That replaces the older
+      // "≥5 frames" heuristic that was firing stranger events too eagerly.
+      if (!track.strangerAnnounced && smoothed === UNKNOWN_ID) {
         track.strangerAnnounced = true;
         emitEvent(
           track,

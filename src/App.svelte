@@ -60,7 +60,7 @@
 
   <footer class="px-4 pb-6 pt-2 text-center text-xs text-slate-600 sm:px-8">
     <a
-      href="https://github.com/Shoray2002/CVisor"
+      href="https://github.com/Shoray2002/CVisor/tree/watchroom"
       target="_blank"
       rel="noreferrer"
       class="transition-colors hover:text-slate-300"

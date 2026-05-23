@@ -1,4 +1,8 @@
-export const RECOGNITION_THRESHOLD = 0.5;
+// Loosened from face-api's canonical 0.5 — that threshold is calibrated for
+// 1:1 verification, but the smoothing window downstream already requires
+// multiple agreeing frames before committing to an identity, so we can
+// afford to be more permissive per-frame and let the aggregator filter.
+export const RECOGNITION_THRESHOLD = 0.55;
 
 export function euclideanDistance(a, b) {
   let sum = 0;
@@ -20,17 +24,21 @@ export async function detectFacesWithDescriptors(faceapi, video, minConfidence =
   return faceapi.detectAllFaces(video, options).withFaceLandmarks().withFaceDescriptors();
 }
 
-export function matchEmbedding(descriptor, roster, threshold = RECOGNITION_THRESHOLD) {
-  let best = null;
-  let bestDist = threshold;
+/**
+ * Return every roster entry that the descriptor matches under the threshold,
+ * paired with its distance. Used by the tracker's smoothing layer, which
+ * picks an identity based on best min-distance across a window of frames
+ * rather than per-frame argmin. Surfacing all candidates (not just the best)
+ * lets the aggregator notice when the *same* face occasionally matches
+ * weakly — that's the signal we want to retain across noisy frames.
+ */
+export function matchEmbeddingCandidates(descriptor, roster, threshold = RECOGNITION_THRESHOLD) {
+  const out = [];
   for (const entry of roster) {
     const d = euclideanDistance(descriptor, entry.embedding);
-    if (d < bestDist) {
-      bestDist = d;
-      best = entry;
-    }
+    if (d < threshold) out.push({ id: entry.id, distance: d });
   }
-  return best ? { id: best.id, name: best.name, distance: bestDist } : null;
+  return out;
 }
 
 /**

@@ -67,14 +67,6 @@ export async function deleteFromRoster(id) {
   await reqAsPromise(store.delete(id));
 }
 
-export async function renameRosterEntry(id, name) {
-  const store = await tx(STORE_ROSTER, 'readwrite');
-  const entry = await reqAsPromise(store.get(id));
-  if (!entry) return;
-  entry.name = name;
-  await reqAsPromise(store.put(entry));
-}
-
 export async function appendEvent({ kind, trackId, identityId = null, name = null, thumbnail }) {
   const store = await tx(STORE_EVENTS, 'readwrite');
   return reqAsPromise(
