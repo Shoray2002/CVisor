@@ -9,8 +9,8 @@
   <div class="flex flex-col gap-6 pt-4 sm:pt-12">
     <p class="text-sm tracking-wide text-indigo-300/80 uppercase">On-device CCTV monitoring</p>
     <h1 class="text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
-      Watch your space,
-      <span class="text-slate-400">stay private.</span>
+      Watch your room,
+      <span class="text-slate-400">all locally.</span>
     </h1>
     <p class="max-w-xl text-base leading-relaxed text-slate-400 sm:text-lg">
       Watchroom runs face detection and recognition directly in your browser. Enroll faces you know,
